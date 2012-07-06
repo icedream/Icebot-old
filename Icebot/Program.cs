@@ -89,7 +89,7 @@ namespace Icebot
 
         static void License()
         {
-            Console.WriteLine(string.Join("; ", Icebot._asm.GetManifestResourceNames()));
+            Console.WriteLine(new StreamReader(Icebot._asm.GetManifestResourceStream("Icebot.LICENSE.txt")).ReadToEnd());
         }
     }
 }
