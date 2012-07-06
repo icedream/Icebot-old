@@ -61,8 +61,21 @@ namespace Icebot.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt; 
-        /// ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die 
+        ///  &lt;!--
+        ///  This is the log4net part of the configuration. It completely follows the rules
+        ///  of the standard log4net XML parsing.
+        ///
+        ///  For more info on how to configure log4net to your needs, check out:
+        ///    http://logging.apache.org/log4net/release/config-examples.html
+        ///    http://logging.apache.org/log4net/release/manual/configuration.html
+        ///  --&gt;
+        ///  &lt;log4net&gt;
+        ///    &lt;root&gt;
+        ///      &lt;level value=&quot;DEBUG&quot; /&gt;
+        ///      &lt;appender-ref ref=&quot;LogFileAppender&quot; /&gt;
+        ///      &lt;appender-ref ref=&quot;ColoredConsoleAppender&quot; /&gt;
+        ///     [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
         /// </summary>
         internal static string l4nStandardConfiguration {
             get {

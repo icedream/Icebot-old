@@ -1,4 +1,22 @@
-﻿using System;
+﻿/**
+ * Icebot - Extensible, multi-functional C# IRC bot
+ * Copyright (C) 2012 Carl Kittelberger
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -157,6 +175,7 @@ namespace Icebot
                         // "<nick> :{[@|+]<channel><space>}"
                         if (!user.Nickname.Equals(last_reply.DataSplit[0]))
                             break;
+#if BLEED
                         foreach (string channel in last_reply.DataSplit.Last().Split(' '))
                         {
                             string channame = channel;
@@ -179,6 +198,7 @@ namespace Icebot
                             }
                                 
                         }
+#endif
                         break;
                     case Numeric.RPL_WHOISSERVER:
                         // "<nick> <server> :<server info>"
@@ -199,7 +219,7 @@ namespace Icebot
                         break;
                     case Numeric.RPL_ENDOFWHOIS:
                     case Numeric.RPL_ENDOFWHOWAS:
-                        SyncUserInfo(user);
+                        //SyncUserInfo(user);
                         eod = true; // Reply ends here. End of data.
                         break;
                 }
@@ -281,7 +301,7 @@ namespace Icebot
             switch (last_reply.Numeric)
             {
                 case Numeric.RPL_AWAY:
-                    user = GetUser(last_reply.DataSplit[0]);
+                    user = GetUserByNick(last_reply.DataSplit[0]);
                     user.IsAway = true;
                     user.AwayMessage = last_reply.DataSplit.Last();
                     break;
@@ -314,11 +334,11 @@ namespace Icebot
                     _log.Info("Server time: " + last_reply.Data);
                     break;
                 case Numeric.RPL_MYINFO:
-                    _mynick = last_reply.Target;
-                    if (Configuration.Nickname != _mynick)
+                    Me.Nickname = last_reply.Target;
+                    if (Configuration.Nickname != Me.Nickname)
                         _log.WarnFormat("Configured nickname {0} is already in use, took {1}!",
                             Configuration.Nickname,
-                            _mynick);
+                            Me.Nickname);
 
                     ServerInfo.Add("host", last_reply.DataSplit[0]);
                     ServerInfo.Add("software", last_reply.DataSplit[1]);
@@ -387,7 +407,7 @@ namespace Icebot
             else
             {
                 SendCommand("nick", nick);
-                _mynick = nick;
+                Me.Nickname = nick;
             }
         }
 
