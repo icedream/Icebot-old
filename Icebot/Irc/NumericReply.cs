@@ -39,19 +39,23 @@ namespace Icebot.Irc
                 throw new FormatException("Raw line is not a valid numeric reply.");
 
             Sender = spl[0];
+            if (Sender.StartsWith(":"))
+                Sender = Sender.Substring(1);
             Numeric = (Numeric)num; // int.Parse(spl[1]);
             Target = spl[2];
             if (spl[3].StartsWith(":"))
                 Data = string.Join(" ", spl.Skip(3)).Substring(1);
             else
-                Data = spl[3];
+                Data = string.Join(" ", spl.Skip(3));
 
             // Generate splitted data array
             List<string> s = new List<string>();
             string[] s1 = Data.Split(new string[] { " :" }, StringSplitOptions.RemoveEmptyEntries);
-            string lastParam = s1.Last();
+            if (s1.Length > 2)
+                Console.WriteLine("LOGIC FAIL: s1.Length > 2 should not be true!");
             s.AddRange(s1[0].Split(' '));
-            s.Add(lastParam);
+            if (s1.Length > 1 && !string.IsNullOrEmpty(s1[1]))
+                s.Add(s1[1]);
             DataSplit = s.ToArray();
         }
 
