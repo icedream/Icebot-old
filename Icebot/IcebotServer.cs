@@ -24,6 +24,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.Security;
+using System.Reflection;
 using System.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography;
@@ -134,7 +135,10 @@ namespace Icebot
                         }
 
                         // Command handling
-
+                        if (split[0].ToLower() == "ping")
+                        {
+                            SendCommand("pong", split[1].TrimStart(':'));
+                        }
                     }
                 }
             }
@@ -327,6 +331,8 @@ namespace Icebot
                     if (!gotMotdOnce)
                     {
                         gotMotdOnce = true;
+                        if(Configuration.SetBotFlag)
+                            SendCommand("mode", Me.Nickname, "+B");
                         AutoJoinChannels();
                     }
                     break;
@@ -340,6 +346,8 @@ namespace Icebot
                             Configuration.Nickname,
                             Me.Nickname);
 
+                    _log.Debug("Got MYINFO from " + last_reply.Sender + " to " + last_reply.Target + ": " + string.Join("//", last_reply.DataSplit));
+
                     ServerInfo.Add("host", last_reply.DataSplit[0]);
                     ServerInfo.Add("software", last_reply.DataSplit[1]);
                     ServerInfo.Add("available_usermodes", last_reply.DataSplit[2]);
@@ -352,7 +360,7 @@ namespace Icebot
                 case Numeric.RPL_ISUPPORT:
                     foreach (string s in last_reply.DataSplit)
                     {
-                        if (s.StartsWith(":"))
+                        if (s.Contains(" "))
                             break;
 
                         string[] s2 = s.Split('=');
@@ -451,6 +459,7 @@ namespace Icebot
 
         private void AutoJoinChannels()
         {
+            _log.Info("Auto-joining " + Configuration.Channels.Count + " channels...");
             foreach (IcebotChannelConfiguration conf in Configuration.Channels)
                 ApplyChannel(new IcebotChannel(this, conf), false);
         }
@@ -600,7 +609,34 @@ namespace Icebot
             if (!_tcp.Connected)
                 ForceDisconnect();
             Writer.WriteLine(rawline);
+            Writer.Flush();
             _log.Debug("(C => S) " + rawline);
+        }
+
+        public void LoadAllPlugins()
+        {
+
+        }
+
+        public void LoadPlugin(string name)
+        {
+            DirectoryInfo dir = new DirectoryInfo("plugins");
+            dir.Create();
+
+            List<FileInfo> pluginfiles = new List<FileInfo>();
+            pluginfiles.Add(new FileInfo(System.Diagnostics.Process.GetCurrentProcess().ProcessName));
+            pluginfiles.AddRange(dir.GetFiles("*.dll", SearchOption.TopDirectoryOnly));
+            foreach (FileInfo pluginfileinfo in pluginfiles)
+            {
+                try
+                {
+                    Assembly pluginfile = Assembly.LoadFrom(pluginfileinfo.FullName);
+                }
+                catch (Exception assemblyloaderror)
+                {
+                    _log.Warn("Could not load " + pluginfileinfo.Name + ": Not a valid assembly. Remove from plugins folder or to something other than *.dll.");
+                }
+            }
         }
 
         public void SendMessage(string target, string message)

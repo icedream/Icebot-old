@@ -274,6 +274,7 @@ namespace Icebot
             Realname = Nickname + " v" + Icebot._asm.GetName().Version.ToString();
             ReceiveWallops = false;
             Invisible = false;
+            SetBotFlag = true;
             if(Parent != null)
                 CommandPrefix = Parent.CommandPrefix;
         }
@@ -283,6 +284,9 @@ namespace Icebot
 
         [XmlAttribute("serverhost")]
         public string ServerHost { get; set; }
+
+        [XmlAttribute("botflag")]
+        public bool SetBotFlag { get; set; }
 
         [XmlAttribute("serverport")]
         public ushort ServerPort { get; set; }
