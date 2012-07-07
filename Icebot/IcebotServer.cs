@@ -38,10 +38,6 @@ using Icebot.Api;
 
 namespace Icebot
 {
-    public class IcebotPluginImplementation
-    {
-    }
-
     public class IcebotServer
     {
         public IcebotServerConfiguration Configuration { get; internal set; }
@@ -172,18 +168,21 @@ namespace Icebot
             }
         }
 
-        public event OnPrivateBotCommandHandler BotPrivateCommandReceived;
-        public event OnPublicBotCommandHandler BotPublicCommandReceived;
+        public PluginCommandContainer PublicCommands { get; internal set; }
+        public PluginCommandContainer PrivateCommands { get; internal set; }
+
         public event OnNumericReplyHandler NumericReply;
         public event OnRawHandler RawSent;
         public event OnRawHandler RawReceived;
         public event OnReceivedServerSupport ReceivedISupport;
+        public event OnServerUserHandler UserQuit;
 
         internal IcebotServer(Icebot host, IcebotServerConfiguration c)
         {
             Host = host;
             Configuration = c;
-            PrivateCommands = new IcebotCommandsContainer();
+            PrivateCommands = new PluginCommandContainer();
+            PublicCommands = new PluginCommandContainer();
             RfcDefinitions.Add(new Irc.Rfc2812.Commands());
             Registered = false;
         }
@@ -666,6 +665,44 @@ namespace Icebot
                 NumericReply.Invoke(this, last_reply);
         }
 
+        
+        /// Analyzes a message for command and arguments and outputs the results as one variable
+        /// </summary>
+        /// <param name="message">The input message</param>
+        /// <param name="sourceType">The source, from where the message came from</param>
+        /// <returns>An instance of <see cref="IcebotCommand"/> containing all results</returns>
+        public IcebotCommand AnalyzeInput(Message msg)
+        {
+            string message = msg.Message;
+            List<string> args = new List<string>();
+            string[] spl1 = message.Split(new char[] { '"' }, StringSplitOptions.RemoveEmptyEntries);
+            bool even = true;
+            foreach (string spl2 in spl1)
+            {
+                if (!(even = !even))
+                {    // Style: arg1 arg2 arg3 arg4
+                    string[] spl3 = spl2.Split(new char[] { '\t', '\r', '\n', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    args.AddRange(spl3);
+                }
+                else // Style: "arg5"
+                    args.Add(spl2);
+            }
+            string name = args[0];
+            args.RemoveAt(0);
+            IcebotCommand icmd = new IcebotCommand();
+            icmd.Source = msg.Source;
+            if (icmd.IsPublic() && !message.StartsWith(
+                GetChannel(msg.Target).Configuration.CommandPrefix == null
+                ? Configuration.CommandPrefix
+                : GetChannel(msg.Target).Configuration.CommandPrefix)) return null;
+            else name = name.Substring(message.StartsWith(this.Prefix)?1:0);
+            icmd.Arguments = args.ToArray();
+            icmd.Command = name;
+            icmd.Targets = message.Target;
+            return icmd;
+        }
+
+
         protected void HandleReply(Reply reply)
         {
             try
@@ -685,11 +722,15 @@ namespace Icebot
                 switch (reply.Command)
                 {
                     case "privmsg":
-
-                        break;
-                        
                     case "notice":
-
+                        Message msg = new Message(reply);
+                        if (!IsValidChannelName(reply.Arguments[0]))
+                        {
+                            GetUser(msg.Source).ForceMessageReceived(msg);
+                            IcebotCommand cmd = IcebotCommand.Analyze(
+                        }
+                        else
+                            GetChannel(msg.Source).ForceMessageReceived(msg);
                         break;
 
                     case "join":
@@ -711,6 +752,17 @@ namespace Icebot
                             if(ch.HasUser(user))
                                 ch.ForcePartUser(ch.GetUser(user.Hostmask));
                         }
+                        break;
+
+                    case "quit":
+                        user = GetUser(reply.Sender);
+                        foreach (IcebotChannel ch in _channels)
+                        {
+                            if (ch.HasUser(user))
+                                ch.ForcePartUser(ch.GetUser(user.Hostmask));
+                        }
+                        UserQuit.Invoke(user);
+                        _users.Remove(user);
                         break;
                 }
             }
@@ -1008,7 +1060,7 @@ namespace Icebot
 
         protected ILog _log
         {
-            get { return LogManager.GetLogger(this.GetType().Name + ":" + this.Configuration.ServerName); }
+            get { return LogManager.GetLogger(this.Configuration.ServerName); }
         }
     }
 }

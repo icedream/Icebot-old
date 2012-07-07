@@ -30,7 +30,7 @@ namespace Icebot.Api
     public class Plugin : IDisposable
     {
         protected ILog Log
-        { get { return LogManager.GetLogger(this.GetType().Name); } }
+        { get { return LogManager.GetLogger(this.GetType().Name + this.InstanceNumber.ToString()); } }
 
         internal IcebotServerPluginConfiguration _serverPluginConf;
         protected IcebotServerPluginConfiguration ServerConfiguration
@@ -42,11 +42,11 @@ namespace Icebot.Api
         internal PluginInfo _pluginInfo = new PluginInfo();
         public PluginInfo PluginInfo { get { return _pluginInfo; } protected set { _pluginInfo = value; } }
 
-        public virtual void AfterLoad()
+        public virtual void OnAfterLoad()
         {
         }
 
-        public virtual void RegisterCommands()
+        public virtual void OnRegisterCommands()
         {
             Log.Debug("No commands to register.");
         }
@@ -55,7 +55,7 @@ namespace Icebot.Api
     public class PluginCommand
     {
         public string CommandName { get; set; }
-        public Type[] Arghuments { get; set; }
+        public Type[] Arguments { get; set; }
     }
 
     public delegate void CommandDelegate(IcebotCommand command);

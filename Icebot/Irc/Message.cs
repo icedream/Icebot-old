@@ -13,24 +13,58 @@ namespace Icebot.Irc
         internal Message(Reply reply)
         {
             Message = reply.ArgumentLine.Substring(reply.Arguments[0].Length + 1);
-            SourceUser = reply.Server.GetUser(reply.Sender);
+            Source = reply.Sender;
+            Target = reply.Arguments[0];
             switch (reply.Command)
             {
                 case "privmsg":
-                    SourceType = MessageType.PrivateMessage;
+                    if (reply.Server.IsValidChannelName(Target))
+                        if (Message.StartsWith((char)(01) + "ACTION"))
+                            SourceType = MessageType.PublicAction;
+                        else
+                            SourceType = MessageType.PublicMessage;
+                    else
+                        if (Message.StartsWith("\x01"))
+                        {
+                            Message = Message.Trim((char)(01));
+                            if (Message.StartsWith("ACTION"))
+                            {
+                                Message = Message.Substring(7);
+                                SourceType = MessageType.PrivateAction;
+                            }
+                            else
+                            {
+                                SourceType = MessageType.CtcpRequest;
+                            }
+                        }
+                        else
+                            SourceType = MessageType.PrivateMessage;
+                    break;
+                case "notice":
+                    if (reply.Server.IsValidChannelName(Target))
+                    {
+                        SourceType = MessageType.PublicNotice;
+                    }
+                    else
+                        if (Message.StartsWith("\x01"))
+                            SourceType = MessageType.CtcpReply;
+                        else
+                            SourceType = MessageType.PrivateNotice;
                     break;
             }
         }
 
-        internal Message(User targetuser, MessageType type, string message)
+        internal Message(string source, string target, MessageType type, string message)
         {
-
+            Source = source;
+            Target = target;
+            SourceType = type;
+            Message = message;
         }
 
-        public User SourceUser { get; internal set; }
-        public User TargetUser { get; internal set; }
+        public string Source { get; internal set; }
+        public string Target { get; internal set; }
         public MessageType SourceType { get; internal set; }
-        
         public string Message { get; internal set; }
     }
 
@@ -48,8 +82,9 @@ namespace Icebot.Irc
         PublicAction = 4,
         PublicMessage = 5,
 
-        DccRequest = 6,
-        DccReply = 7,
+        CtcpRequest = 6,
+        CtcpReply = 7,
+        Ctcp = CtcpReply | CtcpRequest,
 
         Public = PublicMessage | PublicNotice | PublicAction,
         Private = PrivateMessage | PrivateAction | PrivateNotice

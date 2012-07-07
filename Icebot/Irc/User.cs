@@ -70,10 +70,7 @@ namespace Icebot.Irc
             Server.WhoIs(Hostmask);
         }
 
-        public event OnUserMessageHandler ReceivedPrivateMessage;
-        public event OnUserMessageHandler SentPrivateMessage;
-        public event OnUserMessageHandler ReceivedNotice;
-        public event OnUserMessageHandler SentNotice;
+        public event OnMessageHandler MessageReceived;
 
         public void SendPrivateMessage(string text)
         {
@@ -97,6 +94,11 @@ namespace Icebot.Irc
             Server.UnsetMode(this.Nickname, mode);
         }
 #endif
+        internal void ForceMessageReceived(Message msg)
+        {
+            if (this.MessageReceived != null)
+                MessageReceived.Invoke(msg);
+        }
     }
 
     public class ChannelUser

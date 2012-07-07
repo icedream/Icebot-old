@@ -20,7 +20,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using Icebot.Irc;
+using Icebot.Api;
+using log4net;
 
 namespace Icebot
 {
@@ -28,21 +33,119 @@ namespace Icebot
     {
         public IcebotChannel(IcebotServer server, IcebotChannelConfiguration conf)
         {
-            PublicCommands = new IcebotCommandsContainer();
+            PublicCommands = new PluginCommandContainer();
             Configuration = conf;
 
             Server = server;
         }
 
+
+        #region Plugin implementation
+        private List<ChannelPlugin> _plugins = new List<ChannelPlugin>();
+        public ChannelPlugin[] Plugins { get { return _plugins.ToArray(); } }
+        public string[] PluginNames
+        {
+            get
+            {
+                List<string> l = new List<string>();
+                foreach (ChannelPlugin sp in _plugins)
+                    l.Add(sp.PluginName);
+                return l.ToArray();
+            }
+        }
+
+        protected int GetPluginTypeCount(string pluginname)
+        {
+            int loaded = 0;
+            foreach (Plugin pl in _plugins)
+                if (pl.PluginName == pluginname)
+                    loaded++;
+            return loaded;
+        }
+
+        public void LoadAllPlugins()
+        {
+            foreach (IcebotChannelPluginConfiguration config in Configuration.Plugins)
+                LoadPlugin(config);
+        }
+
+        public void LoadPlugin(IcebotChannelPluginConfiguration config)
+        {
+            DirectoryInfo dir = new DirectoryInfo("plugins");
+            dir.Create();
+
+            List<FileInfo> pluginfiles = new List<FileInfo>();
+            pluginfiles.Add(new FileInfo(System.Diagnostics.Process.GetCurrentProcess().ProcessName));
+            pluginfiles.AddRange(dir.GetFiles("*.dll", SearchOption.TopDirectoryOnly));
+            foreach (FileInfo pluginfileinfo in pluginfiles)
+            {
+                try
+                {
+                    Assembly pluginfile = Assembly.LoadFrom(pluginfileinfo.FullName);
+                    int pluginsfromfile = 0;
+                    int pluginsfoundinfile = 0;
+
+                    // Search for loadable plugin classes
+                    foreach (Type exportedType in pluginfile.GetExportedTypes())
+                    {
+                        if (
+                            !exportedType.IsAbstract
+                            && exportedType.IsClass
+                            && exportedType.IsPublic
+                            && exportedType.IsSubclassOf(typeof(Plugin))
+                            )
+                        {
+                            try
+                            {
+                                ChannelPlugin plugininstance = (ChannelPlugin)Activator.CreateInstance(exportedType);
+                                plugininstance._channel = this;
+                                plugininstance._config = config;
+                                plugininstance.PluginName = exportedType.Name;
+                                plugininstance.InstanceNumber = 1 + GetPluginTypeCount(plugininstance.PluginName);
+                                _plugins.Add(plugininstance);
+                                _log.Info("Successfully loaded " + plugininstance.PluginName + " (Instance #" + plugininstance.InstanceNumber + ")");
+                            }
+                            catch (Exception instanceerror)
+                            {
+                                _log.Error("Found " + exportedType.Name + ", but failed loading as server plugin (" + instanceerror.Message + "). Check if the plugin supports this Icebot version.");
+                            }
+                        }
+                    }
+
+                    if (pluginsfromfile == pluginsfoundinfile)
+                        _log.Info("Loaded " + pluginsfromfile + " of " + pluginsfoundinfile + " plugins from assembly");
+                    else
+                        _log.Warn("Loaded only " + pluginsfromfile + " of " + pluginsfoundinfile + " plugins from assembly! Please check your configuration and be sure to have the newest version of all plugins.");
+                }
+                catch (Exception assemblyloaderror)
+                {
+                    _log.Warn("Could not load " + pluginfileinfo.Name + ": Not a valid assembly (" + assemblyloaderror.Message + "). Remove from plugins folder or to something other than *.dll.");
+                }
+            }
+        }
+
+        public void UnloadPlugin(ChannelPlugin plugin)
+        {
+            _plugins.Remove(plugin);
+            ((IDisposable)plugin).Dispose();
+        }
+        #endregion
+
         public IcebotServer Server { get; set; }
 
         public IcebotChannelConfiguration Configuration { get; internal set; }
 
-        public IcebotCommandsContainer PublicCommands { get; internal set; }
+        public PluginCommandContainer PublicCommands { get; internal set; }
+
+        protected ILog _log
+        {
+            get { return LogManager.GetLogger(this.Server.Configuration.ServerName + ":" + this.Configuration.ChannelName); }
+        }
 
         public event OnPublicBotCommandHandler BotCommandReceived;
-        public event OnUserHandler UserJoined;
-        public event OnUserHandler UserParted;
+        public event OnChannelUserHandler UserJoined;
+        public event OnChannelUserHandler UserParted;
+        public event OnMessageHandler MessageReceived;
 
         internal List<ChannelUser> _users
         {
@@ -156,6 +259,12 @@ namespace Icebot
             if (UserJoined != null)
                 UserJoined.Invoke(cu);
             return cu;
+        }
+
+        internal void ForceMessageReceived(Message msg)
+        {
+            if (this.MessageReceived != null)
+                MessageReceived.Invoke(msg);
         }
 
         internal void ForcePartUser(ChannelUser user)
