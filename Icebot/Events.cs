@@ -29,7 +29,9 @@ namespace Icebot
     public delegate void OnPublicBotCommandHandler(IcebotChannel channel, IcebotCommand cmd);
     public delegate void OnPrivateBotCommandHandler(IcebotServer server, IcebotCommand cmd);
     public delegate void OnNickListUpdate(IcebotChannel channel, IcebotCommand cmd);
-    public delegate void OnUserHandler(IcebotChannel channel, string nickname, string username, string hostname, string hostmask);
-    public delegate void OnNickChange(IcebotServer server);
+    public delegate void OnUserHandler(ChannelUser user);
+    public delegate void OnNickChange(RenamedUser user);
     public delegate void OnReceivedServerSupport(IcebotServer server, string name, string value);
+    public delegate void OnUserMessageHandler(User user, string message);
+    public delegate void OnChannelMessageHandler(Message message);
 }

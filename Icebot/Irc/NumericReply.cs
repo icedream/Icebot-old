@@ -23,46 +23,50 @@ using System.Text;
 
 namespace Icebot.Irc
 {
-    public class NumericReply
+    public class NumericReply : Reply
     {
-        internal NumericReply(string line)
+        internal NumericReply(string line, IcebotServer server)
         {
-            int num = -1;
-
-            // Syntax: :sender NUM yournick :text
-            string[] spl = line.Split(' ');
-
-            if (
-                spl.Length < 3
-                || !int.TryParse(spl[1], out num)
-                )
-                throw new FormatException("Raw line is not a valid numeric reply.");
-
-            Sender = spl[0];
-            if (Sender.StartsWith(":"))
-                Sender = Sender.Substring(1);
-            Numeric = (Numeric)num; // int.Parse(spl[1]);
-            Target = spl[2];
-            if (spl[3].StartsWith(":"))
-                Data = string.Join(" ", spl.Skip(3)).Substring(1);
-            else
-                Data = string.Join(" ", spl.Skip(3));
-
-            // Generate splitted data array
-            List<string> s = new List<string>();
-            string[] s1 = Data.Split(new string[] { " :" }, StringSplitOptions.RemoveEmptyEntries);
-            if (s1.Length > 2)
-                Console.WriteLine("LOGIC FAIL: s1.Length > 2 should not be true!");
-            s.AddRange(s1[0].Split(' '));
-            if (s1.Length > 1 && !string.IsNullOrEmpty(s1[1]))
-                s.Add(s1[1]);
-            DataSplit = s.ToArray();
+            __construct(line, server);
         }
 
-        public string Sender { get; internal set; }
-        public Numeric Numeric { get; internal set; }
-        public string Target { get; internal set; }
-        public string Data { get; internal set; }
-        public string[] DataSplit { get; internal set; }
+        private string _command;
+        private new string Command
+        {
+            set
+            {
+                int num = -1;
+
+                if (!int.TryParse(value, out num))
+                    throw new FormatException("This is not a valid numeric reply (" + value + ")");
+
+                Numeric = (Numeric)num;
+            }
+        }
+
+        private string[] _args = { };
+        public new string[] Arguments
+        {
+            get { return _args; }
+            private set
+            {
+                _args = value;
+
+                Target = _args[0];
+                _args = _args.Skip(1).ToArray();
+            }
+        }
+
+        public string Target
+        {
+            get;
+            private set;
+        }
+
+        public Numeric Numeric
+        {
+            get;
+            private set;
+        }
     }
 }

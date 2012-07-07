@@ -49,10 +49,15 @@
     <Compile Include="IcebotChannel.cs" />
     <Compile Include="IcebotCommand.cs" />
     <Compile Include="IcebotConfiguration.cs" />
-    <Compile Include="IcebotPlugin.cs" />
+    <Compile Include="Api\Plugin.cs" />
     <Compile Include="IcebotServer.cs" />
     <Compile Include="InternalPlugins\PluginList.cs" />
     <Compile Include="InternalPlugins\Version.cs" />
+    <Compile Include="Irc\ChannelInfo.cs" />
+    <Compile Include="Irc\Message.cs" />
+    <Compile Include="Irc\Mode.cs" />
+    <Compile Include="Irc\RenamedUser.cs" />
+    <Compile Include="Irc\Reply.cs" />
     <Compile Include="Irc\NumericReply.cs" />
     <Compile Include="Irc\Rfc2812\Commands.cs" />
     <Compile Include="Irc\Numeric.cs" />
@@ -65,7 +70,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="User.cs" />
+    <Compile Include="Irc\User.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icebot.xml.scratch">

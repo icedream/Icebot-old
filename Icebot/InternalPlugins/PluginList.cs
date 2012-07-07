@@ -20,12 +20,57 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Icebot.Api;
 
 #if PLUGIN_PLUGINLIST
 namespace Icebot.InternalPlugins
 {
-    public class PluginList : IcebotPlugin
+    public class PluginList : ChannelPlugin
     {
+        public PluginList()
+        {
+            this.PluginInfo = new PluginInfo("Plugin list");
+        }
+
+        public void public_ls()
+        {
+            List<string> allNames = new List<string>();
+
+            if (Channel.Server.Plugins.Length != 0)
+                allNames.AddRange(Channel.Server.PluginNames);
+            if (Channel.Plugins.Length != 0)
+                allNames.AddRange(Channel.PluginNames);
+
+            if (allNames.Count > 0)
+                Channel.SendMessage("Available plugins on this channel: "
+                    + string.Join("; ", allNames)
+                    + "."
+                    );
+            else
+                Channel.SendMessage("No plugins loaded");
+        }
+
+        public void public_lsc()
+        {
+            if (Channel.Plugins.Length != 0)
+                Channel.SendMessage("Available channel plugins on this channel: "
+                    + string.Join("; ", Channel.PluginNames)
+                    + "."
+                    );
+            else
+                Channel.SendMessage("No channel plugins loaded.");
+        }
+
+        public void public_lss()
+        {
+            if (Channel.Server.Plugins.Length != 0)
+                Channel.SendMessage("Available server plugins on this channel: "
+                    + string.Join("; ", Channel.Server.PluginNames)
+                    + "."
+                    );
+            else
+                Channel.SendMessage("No channel plugins loaded.");
+        }
     }
 }
 #endif

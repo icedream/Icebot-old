@@ -38,8 +38,13 @@ namespace Icebot.Irc
         public string Username { get; internal set; }
         public string Hostname { get; internal set; }
         public string Realname { get; internal set; }
+#if MANAGED_MODES
+        public Mode[] Modes { get { return _modes; } }
+        private List<Mode> _modes = new List<Mode>();
+#endif
         public IcebotServer Server { get; internal set; }
         public string ServerHost { get; internal set; }
+        public int Hopcount { get; internal set; }
         public IcebotChannel[] Channels { get { return _channels.ToArray(); } }
         public TimeSpan IdleTime
         {
@@ -64,9 +69,37 @@ namespace Icebot.Irc
             User newInfo = new User(Server);
             Server.WhoIs(Hostmask);
         }
+
+        public event OnUserMessageHandler ReceivedPrivateMessage;
+        public event OnUserMessageHandler SentPrivateMessage;
+        public event OnUserMessageHandler ReceivedNotice;
+        public event OnUserMessageHandler SentNotice;
+
+        public void SendPrivateMessage(string text)
+        {
+            Server.SendMessage(Nickname, text);
+        }
+        public void SendNotice(string text)
+        {
+            Server.SendNotice(Nickname, text);
+        }
+        public void Mode(string flags)
+        {
+            Server.Mode(this.Nickname, flags);
+        }
+#if MANAGED_MODES
+        public void SetMode(Mode mode)
+        {
+            Server.SetMode(this.Nickname, mode);
+        }
+        public void UnsetMode(Mode mode)
+        {
+            Server.UnsetMode(this.Nickname, mode);
+        }
+#endif
     }
 
-    public class ChannelUser : User
+    public class ChannelUser
     {
         internal ChannelUser() { }
 
@@ -75,7 +108,27 @@ namespace Icebot.Irc
             Channel = chan;
         }
 
+        public ChannelUser(User user)
+        {
+            User = user;
+        }
+        
+        public ChannelUser(User user, IcebotChannel chan)
+        {
+            User = user;
+            Channel = chan;
+        }
+
+        private void ApplyChannel()
+        {
+            if(!User._channels.Contains(Channel))
+                User._channels.Add(Channel);
+        }
+
         //public string ChannelModes { get; internal set; }
         public IcebotChannel Channel { get; internal set; }
+        public User User { get; internal set; }
+
     }
+
 }

@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Icebot.Irc;
 
 namespace Icebot
 {
@@ -44,7 +45,7 @@ namespace Icebot
         /// <summary>
         /// From where does the command come from?
         /// </summary>
-        public IcebotCommandSourceType SourceType
+        public MessageType SourceType
         { get; internal set; }
 
         /// <summary>
@@ -76,23 +77,8 @@ namespace Icebot
 
         public bool IsPublic()
         {
-            return (IcebotCommandSourceType.Public & SourceType) == SourceType;
+            return (MessageType.Public & SourceType) == SourceType;
         }
     }
 
-    /// <summary>
-    /// Represents the source from which the command came.
-    /// </summary>
-    [Flags]
-    public enum IcebotCommandSourceType
-    {
-        PrivateMessage = 0,
-        PrivateAction = 1,
-        PrivateNotice = 2,
-        PublicNotice = 3,
-        PublicMessage = 4,
-
-        Public = PublicMessage | PublicNotice,
-        Private = PrivateMessage | PrivateAction | PrivateNotice
-    }
 }

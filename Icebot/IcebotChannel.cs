@@ -52,7 +52,7 @@ namespace Icebot
                 foreach (User user in Server.Users)
                     if (user.Channels.Contains(this))
                     {
-                        ChannelUser cu = (ChannelUser)user;
+                        ChannelUser cu = new ChannelUser(user);
                         cu.Channel = this;
                         u.Add(cu);
                     }
@@ -61,6 +61,10 @@ namespace Icebot
         }
         public ChannelUser[] Users
         { get { return _users.ToArray(); } }
+
+        public DateTime CreationTime;
+
+        public string Topic { get; internal set; }
 
         public void SendMessage(string text)
         {
@@ -76,55 +80,51 @@ namespace Icebot
         }
         public void Ban(string who)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, "+b " + who);
+            Mode("+b " + who);
         }
         public void Unban(string who)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, "-b " + who);
+            Mode("-b " + who);
         }
         public void Voice(string who)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, "+v " + who);
+            Mode("+v " + who);
         }
         public void Devoice(string who)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, "-v " + who);
+            Mode("-v " + who);
         }
         public void Op(string who)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, "+o " + who);
+            Mode("+o " + who);
         }
         public void Deop(string who)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, "-o " + who);
+            Mode("-o " + who);
         }
         public void Halfop(string who)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, "+h " + who);
+            Mode("+h " + who);
         }
         public void Dehalfop(string who)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, "-h " + who);
+            Mode("-h " + who);
         }
         public void Protect(string who)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, "+a " + who);
+            Mode("+a " + who);
         }
         public void Deprotect(string who)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, "-a " + who);
+            Mode("-a " + who);
         }
-        public void Mode(string who, string flag, bool plus)
+        public void SetTopic(string text)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, (plus ? "+" : "-") + flag + " " + who);
+            Server.SendCommand("topic", text);
         }
-        public void Mode(string who, string flag)
+        public void Mode(params string[] modes)
         {
-            Server.SendCommand("mode", Configuration.ChannelName, flag + " " + who);
-        }
-        public void Mode(string chanflags)
-        {
-            Server.SendCommand("mode", Configuration.ChannelName, chanflags);
+            Server.Mode(this.Configuration.ChannelName, modes);
         }
         public void Leave()
         {
@@ -132,15 +132,38 @@ namespace Icebot
         }
         public bool HasUser(Hostmask hostmask)
         {
-            foreach (User u in _users)
-                if (u.Hostmask == hostmask)
+            foreach (ChannelUser u in _users)
+                if (u.User.Hostmask == hostmask)
                     return true;
             return false;
         }
         public bool HasUser(User user)
         { return HasUser(user.Hostmask); }
         public bool HasUser(ChannelUser user)
-        { return HasUser(user.Hostmask); }
+        { return HasUser(user.User.Hostmask); }
+
+        public ChannelUser GetUser(Hostmask hostmask)
+        {
+            foreach (ChannelUser cu in _users)
+                if (cu.User.Hostmask == hostmask)
+                    return cu;
+            return null;
+        }
+
+        internal ChannelUser ForceJoinUser(User user)
+        {
+            ChannelUser cu = new ChannelUser(user, this);
+            if (UserJoined != null)
+                UserJoined.Invoke(cu);
+            return cu;
+        }
+
+        internal void ForcePartUser(ChannelUser user)
+        {
+            _users.Remove(user);
+            if (UserParted != null)
+                UserParted.Invoke(user);
+        }
 
         public string ChannelModes { get; internal set; }
     }

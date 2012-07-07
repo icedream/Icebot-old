@@ -34,12 +34,108 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using log4net;
 using Icebot.Irc;
+using Icebot.Api;
 
 namespace Icebot
 {
+    public class IcebotPluginImplementation
+    {
+    }
+
     public class IcebotServer
     {
         public IcebotServerConfiguration Configuration { get; internal set; }
+
+        #region Plugin implementation
+        private List<ServerPlugin> _plugins = new List<ServerPlugin>();
+        public ServerPlugin[] Plugins { get { return _plugins.ToArray(); } }
+        public string[] PluginNames
+        {
+            get
+            {
+                List<string> l = new List<string>();
+                foreach (ServerPlugin sp in _plugins)
+                    l.Add(sp.PluginName);
+                return l.ToArray();
+            }
+        }
+
+        protected int GetPluginTypeCount(string pluginname)
+        {
+            int loaded = 0;
+            foreach (Plugin pl in _plugins)
+                if (pl.PluginName == pluginname)
+                    loaded++;
+            return loaded;
+        }
+
+        public void LoadAllPlugins()
+        {
+            foreach (IcebotServerPluginConfiguration config in Configuration.Plugins)
+                LoadPlugin(config);
+        }
+
+        public void LoadPlugin(IcebotServerPluginConfiguration config)
+        {
+            DirectoryInfo dir = new DirectoryInfo("plugins");
+            dir.Create();
+
+            List<FileInfo> pluginfiles = new List<FileInfo>();
+            pluginfiles.Add(new FileInfo(System.Diagnostics.Process.GetCurrentProcess().ProcessName));
+            pluginfiles.AddRange(dir.GetFiles("*.dll", SearchOption.TopDirectoryOnly));
+            foreach (FileInfo pluginfileinfo in pluginfiles)
+            {
+                try
+                {
+                    Assembly pluginfile = Assembly.LoadFrom(pluginfileinfo.FullName);
+                    int pluginsfromfile = 0;
+                    int pluginsfoundinfile = 0;
+
+                    // Search for loadable plugin classes
+                    foreach (Type exportedType in pluginfile.GetExportedTypes())
+                    {
+                        if (
+                            !exportedType.IsAbstract
+                            && exportedType.IsClass
+                            && exportedType.IsPublic
+                            && exportedType.IsSubclassOf(typeof(Plugin))
+                            )
+                        {
+                            try
+                            {
+                                ServerPlugin plugininstance = (ServerPlugin)Activator.CreateInstance(exportedType);
+                                plugininstance._server = this;
+                                plugininstance._serverPluginConf = config;
+                                plugininstance.PluginName = exportedType.Name;
+                                plugininstance.InstanceNumber = 1 + GetPluginTypeCount(plugininstance.PluginName);
+                                _plugins.Add(plugininstance);
+                                _log.Info("Successfully loaded " + plugininstance.PluginName + " (Instance #" + plugininstance.InstanceNumber + ")");
+                            }
+                            catch (Exception instanceerror)
+                            {
+                                _log.Error("Found " + exportedType.Name + ", but failed loading as server plugin (" + instanceerror.Message + "). Check if the plugin supports this Icebot version.");
+                            }
+                        }
+                    }
+
+                    if(pluginsfromfile == pluginsfoundinfile)
+                        _log.Info("Loaded " + pluginsfromfile + " of " + pluginsfoundinfile + " plugins from assembly");
+                    else
+                        _log.Warn("Loaded only " + pluginsfromfile + " of " + pluginsfoundinfile + " plugins from assembly! Please check your configuration and be sure to have the newest version of all plugins.");
+                }
+                catch (Exception assemblyloaderror)
+                {
+                    _log.Warn("Could not load " + pluginfileinfo.Name + ": Not a valid assembly (" + assemblyloaderror.Message + "). Remove from plugins folder or to something other than *.dll.");
+                }
+            }
+        }
+
+        public void UnloadPlugin(ServerPlugin plugin)
+        {
+            _plugins.Remove(plugin);
+            ((IDisposable)plugin).Dispose();
+        }
+        #endregion
 
         internal TcpClient _tcp = new TcpClient();
         internal Stream _ns;
@@ -47,7 +143,6 @@ namespace Icebot
         public StreamWriter Writer { get; internal set; }
         public StreamReader Reader { get; internal set; }
         public Icebot Host { get; internal set; }
-        public IcebotCommandsContainer PrivateCommands { get; internal set; }
         public string MOTD { get { return string.Join(Environment.NewLine, _motd);  } }
         public string[] MOTDLines { get { return _motd.ToArray();  } }
         private List<string> _motd = new List<string>();
@@ -60,13 +155,25 @@ namespace Icebot
         private NumericReply last_reply = null;
         private NumericReply last_error = null;
         public User Me { get; internal set; }
+        private List<string> _ignores = new List<string>();
         public User[] Users { get { return _users.ToArray(); } }
         private List<User> _users = new List<User>();
 
+        private Dictionary<char, char> _prefixes = new Dictionary<char, char>();
+        public Dictionary<char, char> AvailablePrefixes { get { return _prefixes; } }
+        public Dictionary<char, char> AvailableChannelUserModes
+        {
+            get
+            {
+                Dictionary<char, char> _modes = new Dictionary<char,char>();
+                foreach (char key in _prefixes.Keys)
+                    _modes[_prefixes[key]] = key;
+                return _modes;
+            }
+        }
+
         public event OnPrivateBotCommandHandler BotPrivateCommandReceived;
         public event OnPublicBotCommandHandler BotPublicCommandReceived;
-        public event OnNickChange NickChange;
-        public event OnNickListUpdate NickListUpdate;
         public event OnNumericReplyHandler NumericReply;
         public event OnRawHandler RawSent;
         public event OnRawHandler RawReceived;
@@ -119,28 +226,25 @@ namespace Icebot
         {
             try
             {
+                _tcp.ReceiveTimeout = 20000;
+                _tcp.SendTimeout = 20000;
                 while (_tcp.Connected)
                 {
                     string line = Recv();
-                    string[] split = line.Split(' ');
-                    int numeric = -1;
-
-                    // Check for server-side auth messages
-                    if (split.Length > 2)
+                    if (line == null)
+                        break;
+                    if (line.ToLower().StartsWith("ping"))
                     {
-                        if (int.TryParse(split[1], out numeric)) // Numeric reply handling
-                        {
-                            HandleNumericReply(line);
-                            continue;
-                        }
-
-                        // Command handling
-                        if (split[0].ToLower() == "ping")
-                        {
-                            SendCommand("pong", split[1].TrimStart(':'));
-                        }
+                        SendCommand("pong", string.Join(" ", line.Split(' ').Skip(1)).TrimStart(':'));
+                        continue;
                     }
+
+                    HandleReply(new Reply(line, this));
                 }
+                _log.Info("Disconnected from server, reconnecting in 5 seconds...");
+                ForceDisconnect();
+                Thread.Sleep(5);
+                Connect();
             }
             catch (Exception e)
             {
@@ -151,6 +255,120 @@ namespace Icebot
                 _log.Error("Read thread generated an exception: " + e.ToString());
 #endif
             }
+        }
+
+        internal ChannelUser[] ReadWhoReply()
+        {
+            List<ChannelUser> users = new List<ChannelUser>();
+            bool eod = false;
+
+            do
+            {
+                NumericReply r = ReadNumReply();
+
+                if (last_reply.Numeric.ToString().StartsWith("ERR_"))
+                    return null;
+
+                switch (r.Numeric)
+                {
+                    case Numeric.RPL_WHOREPLY:
+                        // "<channel> <user> <host> <server> <nick> ( "H" / "G" > ["*"] [ ( "@" / "+" ) ] :<hopcount> <real name>"
+                        ChannelUser user = new ChannelUser(GetUser(r.Arguments[4]));
+                        user.Channel = GetChannel(r.Arguments[0]);
+                        user.User.Username = r.Arguments[1];
+                        user.User.Hostname = r.Arguments[2];
+                        // TODO: What about <server> in WHO reply?
+                        user.User.Hopcount = int.Parse(r.Arguments.Last().Split(' ')[0]);
+                        user.User.Realname = r.Arguments.Last().Substring(r.Arguments.Last().IndexOf(' ') + 1);
+                        break;
+                    case Numeric.RPL_ENDOFWHO:
+                        eod = true;
+                        break;
+                }
+            } while (!eod);
+            return users.ToArray();
+        }
+
+        public bool IsValidChannelName(string channelname)
+        {
+            if (!ServerInfo["CHANTYPES"].Contains(channelname[0]))
+                return false;
+
+            return true;
+        }
+
+        public string CombineModes(params string[] modes)
+        {
+            // Sort modes alphabetically.
+            Array.Sort(modes);
+
+            List<char> plusmodes = new List<char>();
+            List<char> minusmodes = new List<char>();
+            List<string> plusarg = new List<string>();
+            List<string> minusarg = new List<string>();
+
+            foreach (string m in modes)
+            {
+                string[] ms = m.Split(' ');
+                char pre = m[0];
+                char mode = m[1];
+                string arg = null;
+                if(ms.Length > 1)
+                    arg = ms[1];
+                else if (ms.Length > 2)
+                    _log.Warn("Ignoring wrongly placed parameters in inputted modes.");
+                switch (mode)
+                {
+                    case '+':
+                        plusmodes.Add(mode);
+                        if (arg != null)
+                            plusarg.Add(arg);
+                        break;
+                    case '-':
+                        minusmodes.Add(mode);
+                        if (arg != null)
+                            minusarg.Add(arg);
+                        break;
+                }
+            }
+
+            string cm = "";
+            if (minusmodes.Count > 0)
+                cm += "-" + string.Join("", minusmodes);
+            if (plusmodes.Count > 0)
+                cm += "+" + string.Join("", plusmodes);
+            cm += " "
+                + string.Join(" ", minusarg)
+                + string.Join(" ", plusarg)
+                ;
+
+            return cm;
+        }
+
+        public void Mode(string target, params string[] modes)
+        {
+            SendCommand("mode", target, CombineModes(modes));
+        }
+
+        public void Ignore(string who)
+        {
+            _ignores.Add(who.ToLower());
+            if (ServerInfo.ContainsKey("CALLERID")) // Server supports +g ignoring?
+                Mode(who, "+g");
+        }
+
+        public void Unignore(string who)
+        {
+            _ignores.Remove(who.ToLower());
+        }
+
+        public bool IsPrefix(char prefix)
+        {
+            return _prefixes.ContainsKey(prefix);
+        }
+        public bool IsChannelUserMode(char mode)
+        {
+            return _prefixes.ContainsValue(mode);
         }
 
         internal User ReadWhoIsReply()
@@ -170,17 +388,16 @@ namespace Icebot
                     case Numeric.RPL_WHOWASUSER:
                     case Numeric.RPL_WHOISUSER:
                         // "<nick> <user> <host> * :<real name>"
-                        user.Nickname = last_reply.DataSplit[0];
-                        user.Username = last_reply.DataSplit[1];
-                        user.Hostname = last_reply.DataSplit[2];
-                        user.Realname = last_reply.DataSplit.Last();
+                        user.Nickname = last_reply.Arguments[0];
+                        user.Username = last_reply.Arguments[1];
+                        user.Hostname = last_reply.Arguments[2];
+                        user.Realname = last_reply.Arguments.Last();
                         break;
                     case Numeric.RPL_WHOISCHANNELS:
                         // "<nick> :{[@|+]<channel><space>}"
-                        if (!user.Nickname.Equals(last_reply.DataSplit[0]))
+                        if (!user.Nickname.Equals(last_reply.Arguments[0]))
                             break;
-#if BLEED
-                        foreach (string channel in last_reply.DataSplit.Last().Split(' '))
+                        foreach (string channel in last_reply.Arguments.Last().Split(' '))
                         {
                             string channame = channel;
                             char prefix = (char)0;
@@ -189,37 +406,35 @@ namespace Icebot
                                 prefix = channel[0];
                                 channame = channel.Substring(1);
                             }
-                            if(!IsChannelName(channame))
-                                channame = MakeChannelString(channame);
                             IcebotChannel chan = GetChannel(channame);
                             user._channels.Add(chan);
                             if (!chan.HasUser(user))
                             {
-                                ChannelUser cu = (ChannelUser)user;
-                                cu.Prefix = prefix;
+                                ChannelUser cu = new ChannelUser(user);
                                 cu.Channel = chan;
                                 chan._users.Add(cu);
                             }
                                 
                         }
-#endif
                         break;
                     case Numeric.RPL_WHOISSERVER:
                         // "<nick> <server> :<server info>"
-                        if (!user.Nickname.Equals(last_reply.DataSplit[0]))
+                        if (!user.Nickname.Equals(last_reply.Arguments[0]))
                             break;
+
+                        // TODO: Implement RPL_WHOISSERVER handling
                         break;
                     case Numeric.RPL_WHOISOPERATOR:
                         // "<nick> :is an IRC operator"
-                        if (!user.Nickname.Equals(last_reply.DataSplit[0]))
+                        if (!user.Nickname.Equals(last_reply.Arguments[0]))
                             break;
                         user.IsIrcOp = true;
                         break;
                     case Numeric.RPL_WHOISIDLE:
                         // "<nick> <integer> :seconds idle"
-                        if (!user.Nickname.Equals(last_reply.DataSplit[0]))
+                        if (!user.Nickname.Equals(last_reply.Arguments[0]))
                             break;
-                        user.IdleTime = TimeSpan.FromSeconds(ulong.Parse(last_reply.DataSplit[1]));
+                        user.IdleTime = TimeSpan.FromSeconds(ulong.Parse(last_reply.Arguments[1]));
                         break;
                     case Numeric.RPL_ENDOFWHOIS:
                     case Numeric.RPL_ENDOFWHOWAS:
@@ -242,8 +457,15 @@ namespace Icebot
         public bool HasUser(User user)
         { return HasUser(user.Hostmask); }
         public bool HasUser(ChannelUser user)
-        { return HasUser(user.Hostmask); }
+        { return HasUser(user.User.Hostmask); }
 
+        public User GetUser(string nickOrHostmask)
+        {
+            if (nickOrHostmask.Contains("@"))
+                return GetUserByHostmask(nickOrHostmask);
+            else
+                return GetUserByNick(nickOrHostmask);
+        }
         public User GetUserByHostmask(string hostmask)
         {
             foreach (User u in _users)
@@ -274,6 +496,37 @@ namespace Icebot
             return users.ToArray();
         }
 
+        public ChannelInfo[] GetAvailableChannels()
+        {
+            List<ChannelInfo> _chanlist = new List<ChannelInfo>();
+
+            SendCommand("list");
+            while (ReadNumReply().Numeric != Numeric.RPL_LISTEND)
+                if (last_reply.Numeric == Numeric.RPL_LIST)
+                    _chanlist.Add(new ChannelInfo(
+                        last_reply.Arguments[0],
+                        int.Parse(last_reply.Arguments[1]),
+                        last_reply.Arguments[2]
+                        ));
+
+            return _chanlist.ToArray();
+        }
+        public ChannelInfo[] GetAvailableChannels(string server)
+        {
+            List<ChannelInfo> _chanlist = new List<ChannelInfo>();
+
+            SendCommand("list", server);
+            while (ReadNumReply().Numeric != Numeric.RPL_LISTEND)
+                if (last_reply.Numeric == Numeric.RPL_LIST)
+                    _chanlist.Add(new ChannelInfo(
+                        last_reply.Arguments[0],
+                        int.Parse(last_reply.Arguments[1]),
+                        last_reply.Arguments[2]
+                        ));
+
+            return _chanlist.ToArray();
+        }
+
         public NumericReply GetLastError()
         {
             return last_error;
@@ -295,9 +548,8 @@ namespace Icebot
             return last_reply;
         }
 
-        protected void HandleNumericReply(string line)
+        protected void HandleNumericReply(NumericReply reply)
         {
-            last_reply = new NumericReply(line);
             if (last_reply.Numeric.ToString().StartsWith("ERR_"))
                 last_error = last_reply;
             User user = null;
@@ -305,9 +557,9 @@ namespace Icebot
             switch (last_reply.Numeric)
             {
                 case Numeric.RPL_AWAY:
-                    user = GetUserByNick(last_reply.DataSplit[0]);
+                    user = GetUserByNick(reply.Arguments[0]);
                     user.IsAway = true;
-                    user.AwayMessage = last_reply.DataSplit.Last();
+                    user.AwayMessage = reply.Arguments.Last();
                     break;
                 case Numeric.ERR_NICKCOLLISION:
                 case Numeric.ERR_NICKNAMEINUSE:
@@ -325,7 +577,7 @@ namespace Icebot
                     _motd.Clear();
                     break;
                 case Numeric.RPL_MOTD:
-                    _motd.Add(last_reply.Data);
+                    _motd.Add(reply.ArgumentLine);
                     break;
                 case Numeric.RPL_ENDOFMOTD:
                     if (!gotMotdOnce)
@@ -336,29 +588,26 @@ namespace Icebot
                         AutoJoinChannels();
                     }
                     break;
-                case Numeric.RPL_TIME:
-                    _log.Info("Server time: " + last_reply.Data);
-                    break;
                 case Numeric.RPL_MYINFO:
-                    Me.Nickname = last_reply.Target;
+                    Me.Nickname = reply.Target;
                     if (Configuration.Nickname != Me.Nickname)
                         _log.WarnFormat("Configured nickname {0} is already in use, took {1}!",
                             Configuration.Nickname,
                             Me.Nickname);
 
-                    _log.Debug("Got MYINFO from " + last_reply.Sender + " to " + last_reply.Target + ": " + string.Join("//", last_reply.DataSplit));
+                    _log.Debug("Got MYINFO from " + reply.Sender + " to " + last_reply.Target + ": " + string.Join("//", last_reply.Arguments));
 
-                    ServerInfo.Add("host", last_reply.DataSplit[0]);
-                    ServerInfo.Add("software", last_reply.DataSplit[1]);
-                    ServerInfo.Add("available_usermodes", last_reply.DataSplit[2]);
-                    ServerInfo.Add("available_chanmodes", last_reply.DataSplit[3]);
+                    ServerInfo.Add("host", reply.Arguments[0]);
+                    ServerInfo.Add("software", reply.Arguments[1]);
+                    ServerInfo.Add("available_usermodes", reply.Arguments[2]);
+                    ServerInfo.Add("available_chanmodes", reply.Arguments[3]);
 
                     // TODO: Implement extended MYINFO (google!)
-                    if (last_reply.DataSplit.Length > 4)
+                    if (last_reply.Arguments.Length > 4)
                         _log.WarnFormat("Ignoring extended info in MYINFO");
                     break;
                 case Numeric.RPL_ISUPPORT:
-                    foreach (string s in last_reply.DataSplit)
+                    foreach (string s in reply.Arguments)
                     {
                         if (s.Contains(" "))
                             break;
@@ -383,6 +632,9 @@ namespace Icebot
                             //    ServerInfo[name] = true;
                         }
 
+                        if (ReceivedISupport != null)
+                            ReceivedISupport.Invoke(this, name, value);
+
                         switch (name.ToLower())
                         {
                             case "charset":
@@ -394,7 +646,13 @@ namespace Icebot
                     }
                     break;
                 case Numeric.RPL_CHANNELMODEIS:
-                    GetChannel(last_reply.DataSplit[0]).ChannelModes = string.Join(" ", last_reply.DataSplit.Skip(1));
+                    GetChannel(reply.Arguments[0]).ChannelModes = string.Join(" ", reply.Arguments.Skip(1));
+                    break;
+                case Numeric.RPL_TOPIC:
+                    GetChannel(reply.Arguments[0]).Topic = reply.Arguments.Last();
+                    break;
+                case Numeric.RPL_NOTOPIC:
+                    GetChannel(reply.Arguments[0]).Topic = null;
                     break;
                 default:
                     if (last_reply.Numeric.ToString() == ((int)last_reply.Numeric).ToString()) // Numeric has no name in enum
@@ -402,6 +660,63 @@ namespace Icebot
                     else
                         _log.Debug("Ignoring known numeric from reply: " + last_reply.Numeric);
                     break;
+            }
+
+            if (NumericReply != null)
+                NumericReply.Invoke(this, last_reply);
+        }
+
+        protected void HandleReply(Reply reply)
+        {
+            try
+            {
+                // Try parsing as a numeric reply
+                try
+                {
+                    NumericReply nr = new NumericReply(reply.Raw, this);
+                    return;
+                }
+                catch (FormatException)
+                { { } }
+
+                // Parse as command reply
+                string[] channels;
+                User user;
+                switch (reply.Command)
+                {
+                    case "privmsg":
+
+                        break;
+                        
+                    case "notice":
+
+                        break;
+
+                    case "join":
+                        channels = reply.ArgumentLine.Split(',');
+                        user = GetUser(reply.Sender);
+                        foreach (string c in channels)
+                        {
+                            IcebotChannel ch = GetChannel(c);
+                            ch.ForceJoinUser(user);
+                        }
+                        break;
+
+                    case "part":
+                        channels = reply.ArgumentLine.Split(',');
+                        user = GetUser(reply.Sender);
+                        foreach (string c in channels)
+                        {
+                            IcebotChannel ch = GetChannel(c);
+                            if(ch.HasUser(user))
+                                ch.ForcePartUser(ch.GetUser(user.Hostmask));
+                        }
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                _log.Error("Error in reply handler: " + e.Message);
             }
         }
 
@@ -422,6 +737,16 @@ namespace Icebot
         public User WhoIs(string nickmask)
         {
             SendCommand("whois", nickmask);
+            return ReadWhoIsReply();
+        }
+        public User WhoWas(params string[] nicknames)
+        {
+            SendCommand("whowas", nicknames);
+            return ReadWhoIsReply();
+        }
+        public User Who(string searchpattern)
+        {
+            SendCommand("who", searchpattern);
             return ReadWhoIsReply();
         }
 
@@ -611,32 +936,8 @@ namespace Icebot
             Writer.WriteLine(rawline);
             Writer.Flush();
             _log.Debug("(C => S) " + rawline);
-        }
-
-        public void LoadAllPlugins()
-        {
-
-        }
-
-        public void LoadPlugin(string name)
-        {
-            DirectoryInfo dir = new DirectoryInfo("plugins");
-            dir.Create();
-
-            List<FileInfo> pluginfiles = new List<FileInfo>();
-            pluginfiles.Add(new FileInfo(System.Diagnostics.Process.GetCurrentProcess().ProcessName));
-            pluginfiles.AddRange(dir.GetFiles("*.dll", SearchOption.TopDirectoryOnly));
-            foreach (FileInfo pluginfileinfo in pluginfiles)
-            {
-                try
-                {
-                    Assembly pluginfile = Assembly.LoadFrom(pluginfileinfo.FullName);
-                }
-                catch (Exception assemblyloaderror)
-                {
-                    _log.Warn("Could not load " + pluginfileinfo.Name + ": Not a valid assembly. Remove from plugins folder or to something other than *.dll.");
-                }
-            }
+            if (RawSent != null)
+                RawSent.Invoke(this, rawline);
         }
 
         public void SendMessage(string target, string message)
@@ -686,10 +987,23 @@ namespace Icebot
         internal string Recv()
         {
             if (!_tcp.Connected)
+            {
                 ForceDisconnect();
-            string line = Reader.ReadLine();
-            _log.Debug("(C <= S) " + line);
-            return line;
+                return null;
+            }
+            try
+            {
+                string line = Reader.ReadLine();
+                _log.Debug("(C <= S) " + line);
+                if (RawReceived != null)
+                    RawReceived.Invoke(this, line);
+                return line;
+            }
+            catch(Exception e)
+            {
+                _log.Warn("Error while receiving: " + e.Message);
+                return null;
+            }
         }
 
         protected ILog _log

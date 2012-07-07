@@ -25,23 +25,10 @@ using System.Xml.Serialization;
 using System.Reflection;
 using log4net;
 
-namespace Icebot
+namespace Icebot.Api
 {
-    public class IcebotPlugin
+    public class Plugin : IDisposable
     {
-        public virtual void RegisterCommands()
-        {
-            Log.Debug("No commands to register for this plugin.");
-        }
-
-        internal IcebotChannel _channel;
-        protected IcebotChannel Channel
-        { get { return _channel; } }
-
-        internal IcebotServer _server;
-        protected IcebotServer Server
-        { get { return _server; } }
-
         protected ILog Log
         { get { return LogManager.GetLogger(this.GetType().Name); } }
 
@@ -49,25 +36,31 @@ namespace Icebot
         protected IcebotServerPluginConfiguration ServerConfiguration
         { get { return _serverPluginConf; } set { _serverPluginConf = value; } }
 
-        internal IcebotServerPluginConfiguration _channelPluginConf;
-        protected IcebotServerPluginConfiguration ChannelConfiguration
-        { get { return _channelPluginConf; } set { _channelPluginConf = value; } }
+        internal string PluginName;
+        public int InstanceNumber { get; internal set; }
 
-        //internal IcebotCommandsContainer _public = new IcebotCommandsContainer();
-        //internal IcebotCommandsContainer _private = new IcebotCommandsContainer();
-        protected IcebotCommandsContainer PublicCommands { get { return Channel.PublicCommands; } }
-        protected IcebotCommandsContainer PrivateCommands { get { return Server.PrivateCommands; } }
+        internal PluginInfo _pluginInfo = new PluginInfo();
+        public PluginInfo PluginInfo { get { return _pluginInfo; } protected set { _pluginInfo = value; } }
 
-        internal void Serialize(XmlWriter xml)
+        public virtual void AfterLoad()
         {
-            XmlSerializer serializer = new XmlSerializer(this.GetType());
-            serializer.Serialize(xml, this);
+        }
+
+        public virtual void RegisterCommands()
+        {
+            Log.Debug("No commands to register.");
         }
     }
 
-    public delegate void IcebotCommandDelegate(IcebotCommand command);
+    public class PluginCommand
+    {
+        public string CommandName { get; set; }
+        public Type[] Arghuments { get; set; }
+    }
 
-    public class IcebotCommandsContainer
+    public delegate void CommandDelegate(IcebotCommand command);
+
+    public class PluginCommandContainer
     {
         List<Tuple<string, string, string[], IcebotCommandDelegate>> _regCommands = new List<Tuple<string, string, string[], IcebotCommandDelegate>>();
 
@@ -132,5 +125,75 @@ namespace Icebot
                 cmd.Add(t.Item1);
             return cmd.ToArray();
         }
+    }
+
+    public class PluginInfo
+    {
+        AssemblyName an = Assembly.GetExecutingAssembly().GetName();
+
+        public PluginInfo()
+        {
+            title = an.FullName;
+        }
+
+        public PluginInfo(string author)
+        {
+            this.author = author;
+            this.version = an.Version;
+        }
+
+        public PluginInfo(string title, string author)
+        {
+            this.title = title;
+            this.author = author;
+            this.version = an.Version;
+        }
+
+        public PluginInfo(string title, string author, string description)
+        {
+            this.title = title;
+            this.author = author;
+            this.Description = description;
+            this.version = an.Version;
+        }
+
+        public PluginInfo(string title, string author, string description, Version version)
+        {
+            this.title = title;
+            this.author = author;
+            this.Description = description;
+            this.version = version;
+        }
+
+        public string Title { get { return title; } set { title = value; } }
+        public string Author { get { return author; } set { author = value; } }
+        public string Description { get; set; }
+        public Version Version { get { return version; } set { version = value; } }
+
+        private string title = "";
+        private string author = "";
+        private Version version;
+    }
+
+    public class ChannelPlugin : Plugin
+    {
+        internal IcebotChannel _channel;
+        protected IcebotChannel Channel
+        { get { return _channel; } }
+
+        internal IcebotChannelPluginConfiguration _config;
+        protected IcebotChannelPluginConfiguration Configuration
+        { get { return _config; } set { _config = value; } }
+    }
+
+    public class ServerPlugin : Plugin
+    {
+        internal IcebotServer _server;
+        protected IcebotServer Server
+        { get { return _server; } }
+
+        internal IcebotServerPluginConfiguration _config;
+        protected IcebotServerPluginConfiguration Configuration
+        { get { return _config; } set { _config = value; } }
     }
 }

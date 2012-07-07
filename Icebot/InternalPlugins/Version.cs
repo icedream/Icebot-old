@@ -24,7 +24,7 @@ using System.Text;
 #if PLUGIN_VERSION
 namespace Icebot.InternalPlugins
 {
-    class Version : IcebotPlugin
+    class Version : Plugin
     {
         public override void RegisterCommands()
         {
