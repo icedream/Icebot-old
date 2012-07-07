@@ -313,7 +313,10 @@ namespace Icebot
         public bool Invisible { get; set; }
 
         [XmlAttribute("prefix")]
-        public string CommandPrefix { get; set; }
+        public string CommandPrefix { get { return _prefix != null ? _prefix : Parent.CommandPrefix; } set { _prefix = value; } }
+
+        [XmlIgnore()]
+        private string _prefix;
 
         [XmlArray("plugins")]
         [XmlArrayItem("plugin")]
@@ -343,7 +346,10 @@ namespace Icebot
         public string ChannelName { get; set; }
 
         [XmlAttribute("prefix")]
-        public string CommandPrefix { get; set; }
+        public string CommandPrefix { get { return _prefix != null ? _prefix : Parent.CommandPrefix; } set { _prefix = value; } }
+
+        [XmlIgnore()]
+        private string _prefix;
 
         [XmlArray("plugins")]
         [XmlArrayItem("plugin")]
