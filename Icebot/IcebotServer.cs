@@ -666,10 +666,10 @@ namespace Icebot
         }
 
         
+        /// <summary>
         /// Analyzes a message for command and arguments and outputs the results as one variable
         /// </summary>
-        /// <param name="message">The input message</param>
-        /// <param name="sourceType">The source, from where the message came from</param>
+        /// <param name="msg">The input message</param>
         /// <returns>An instance of <see cref="IcebotCommand"/> containing all results</returns>
         public IcebotCommand AnalyzeInput(Message msg)
         {
@@ -695,10 +695,10 @@ namespace Icebot
                 GetChannel(msg.Target).Configuration.CommandPrefix == null
                 ? Configuration.CommandPrefix
                 : GetChannel(msg.Target).Configuration.CommandPrefix)) return null;
-            else name = name.Substring(message.StartsWith(this.Prefix)?1:0);
+            else name = name.Substring(message.StartsWith(GetChannel(msg.Target).Configuration.CommandPrefix) ? 1 : 0);
             icmd.Arguments = args.ToArray();
             icmd.Command = name;
-            icmd.Targets = message.Target;
+            icmd.Targets = msg.Target;
             return icmd;
         }
 
@@ -724,13 +724,20 @@ namespace Icebot
                     case "privmsg":
                     case "notice":
                         Message msg = new Message(reply);
-                        if (!IsValidChannelName(reply.Arguments[0]))
-                        {
+                        IcebotCommand cmd = AnalyzeInput(msg);
+                        if (!IsValidChannelName(msg.Target))
                             GetUser(msg.Source).ForceMessageReceived(msg);
-                            IcebotCommand cmd = IcebotCommand.Analyze(
-                        }
                         else
-                            GetChannel(msg.Source).ForceMessageReceived(msg);
+                            GetChannel(msg.Target).ForceMessageReceived(msg);
+                        if (cmd != null)
+                        {
+                            foreach (Plugin pl in _plugins)
+                            {
+                                var pc = pl._cmd.GetCommand(cmd);
+                                if (pc != null)
+                                    pc.Callback.Invoke(cmd);
+                            }
+                        }
                         break;
 
                     case "join":

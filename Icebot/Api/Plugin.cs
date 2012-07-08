@@ -23,7 +23,9 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Reflection;
+using System.Linq.Expressions;
 using log4net;
+using Icebot.Irc;
 
 namespace Icebot.Api
 {
@@ -32,15 +34,15 @@ namespace Icebot.Api
         protected ILog Log
         { get { return LogManager.GetLogger(this.GetType().Name + this.InstanceNumber.ToString()); } }
 
-        internal IcebotServerPluginConfiguration _serverPluginConf;
-        protected IcebotServerPluginConfiguration ServerConfiguration
-        { get { return _serverPluginConf; } set { _serverPluginConf = value; } }
-
         internal string PluginName;
         public int InstanceNumber { get; internal set; }
 
         internal PluginInfo _pluginInfo = new PluginInfo();
         public PluginInfo PluginInfo { get { return _pluginInfo; } protected set { _pluginInfo = value; } }
+
+        internal PluginCommandContainer _cmd = new PluginCommandContainer();
+        public PluginCommandContainer Commands
+        { get { return _cmd; } }
 
         public virtual void OnAfterLoad()
         {
@@ -54,76 +56,103 @@ namespace Icebot.Api
 
     public class PluginCommand
     {
-        public string CommandName { get; set; }
-        public Type[] Arguments { get; set; }
+        public override string ToString()
+        {
+            return Description;
+        }
+        public string Name { get; set; }
+        public Dictionary<string, Type[]> Arguments { get; set; }
+        public string Description { get; set; }
+        public CommandDelegate Callback { get; set; }
+        public MessageType SourceType = MessageType.Public;
+
+        public PluginCommand(MessageType sources, string name, CommandDelegate cmd)
+        {
+            __construct();
+            Name = name; Callback = cmd;
+        }
+
+        public PluginCommand(MessageType sources, string name, string description, CommandDelegate cmd)
+        {
+            __construct();
+            Name = name; Callback = cmd;
+        }
+
+        public PluginCommand(MessageType sources, string name, string description, CommandDelegate cmd, Dictionary<string, Type[]> argumentsdefinition)
+        {
+            __construct();
+            Name = name; Callback = cmd;
+            Arguments = argumentsdefinition;
+        }
+
+        public PluginCommand(MessageType sources, string name, string description, CommandDelegate cmd, Dictionary<string, Type> argumentsdefinition)
+        {
+            __construct();
+            Name = name; Callback = cmd;
+            Arguments = new Dictionary<string,Type[]>();
+            foreach (string key in argumentsdefinition.Keys)
+                Arguments.Add(key, new[] { argumentsdefinition[key] });
+        }
+
+        public PluginCommand(MessageType sources, string name, string description, CommandDelegate cmd, Dictionary<string, string> argumentsdefinition)
+        {
+            __construct();
+            Name = name; Callback = cmd;
+            Arguments = new Dictionary<string, Type[]>();
+            foreach (string key in argumentsdefinition.Keys)
+                Arguments.Add(key, new[] { Type.GetType(argumentsdefinition[key]) });
+        }
+
+        private void __construct()
+        {
+            Arguments = new Dictionary<string, Type[]>();
+            Description = "No description available";
+        }
     }
 
     public delegate void CommandDelegate(IcebotCommand command);
 
     public class PluginCommandContainer
     {
-        List<Tuple<string, string, string[], IcebotCommandDelegate>> _regCommands = new List<Tuple<string, string, string[], IcebotCommandDelegate>>();
+        List<PluginCommand> _regCommands = new List<PluginCommand>();
 
-        public void Add(string command, string description, IcebotCommandDelegate callback)
+        public void Add(PluginCommand cmd)
         {
-            _regCommands.Add(new Tuple<string, string, string[], IcebotCommandDelegate>(command.ToLower(), description, new string[] { }, callback));
+            _regCommands.Add(cmd);
         }
-        public void Add(string command, string description, string semicolonSeparatedArgumentNameList, IcebotCommandDelegate callback)
+        public void Remove(MessageType source, string command)
         {
-            _regCommands.Add(new Tuple<string, string, string[], IcebotCommandDelegate>(command.ToLower(), description, semicolonSeparatedArgumentNameList.Split(';'), callback));
-        }
-        public void Add(string command, string description, string[] argumentNameList, IcebotCommandDelegate callback)
-        {
-            _regCommands.Add(new Tuple<string, string, string[], IcebotCommandDelegate>(command.ToLower(), description, argumentNameList, callback));
-        }
-
-        public void Remove(string command)
-        {
-            var x = _getCommandByName(command);
+            var x = GetCommand(source, command);
             if (x == null)
                 throw new Exception("Could not find registered command " + command);
-            _regCommands.Remove(x);
+            else
+                Remove(x);
         }
-
-        public string GetDescription(string command)
+        public void Remove(PluginCommand command)
         {
-            var x = _getCommandByName(command);
-            if (x == null) return null;
-            return x.Item2;
+            _regCommands.Remove(command);
         }
-
-        public string[] GetArguments(string command)
+        public PluginCommand GetCommand(MessageType source, string command)
         {
-            var x = _getCommandByName(command);
-            if (x == null) return null;
-            return x.Item3;
-        }
-
-        public IcebotCommandDelegate GetCallback(string command)
-        {
-            var x = _getCommandByName(command);
-            if (x == null) return null;
-            return x.Item4;
-        }
-
-        private Tuple<string, string, string[], IcebotCommandDelegate> _getCommandByName(string name)
-        {
-            foreach (Tuple<string, string, string[], IcebotCommandDelegate> cmd in _regCommands)
-            {
-                if (cmd.Item1 == name.ToLower())
-                {
-                    return cmd;
-                }
-            }
+            foreach (PluginCommand pl in _regCommands)
+                if (pl.Name.Equals(command, StringComparison.OrdinalIgnoreCase) && pl.SourceType == source)
+                    return pl;
             return null;
         }
-
-        public string[] GetRegisteredCommandsList()
+        public PluginCommand GetCommand(IcebotCommand cmd)
+        {
+            return GetCommand(cmd.SourceType, cmd.Command);
+        }
+        public string[] GetCommandNameList()
         {
             List<string> cmd = new List<string>();
-            foreach (Tuple<string, string, string[], IcebotCommandDelegate> t in _regCommands)
-                cmd.Add(t.Item1);
+            foreach (var x in _regCommands)
+                cmd.Add(x.Name);
             return cmd.ToArray();
+        }
+        public PluginCommand[] GetCommandList()
+        {
+            return _regCommands.ToArray();
         }
     }
 

@@ -25,14 +25,55 @@ using Icebot.Api;
 #if PLUGIN_PLUGINLIST
 namespace Icebot.InternalPlugins
 {
-    public class PluginList : ChannelPlugin
+    public class PluginManager : ChannelPlugin
     {
-        public PluginList()
+        public PluginManager()
         {
             this.PluginInfo = new PluginInfo("Plugin list");
         }
 
-        public void public_ls()
+        public override void OnRegisterCommands()
+        {
+            Commands.Add(new PluginCommand(
+                Irc.MessageType.Public,
+                "ls",
+                "Lists all loaded server and channel plugins.",
+                new CommandDelegate(public_ls)
+                ));
+            Commands.Add(new PluginCommand(
+                Irc.MessageType.Public,
+                "lsc",
+                "Lists all loaded channel plugins.",
+                new CommandDelegate(public_lsc)
+                ));
+            Commands.Add(new PluginCommand(
+                Irc.MessageType.Public,
+                "lsc",
+                "Lists all loaded server plugins.",
+                new CommandDelegate(public_lss)
+                ));
+
+            Commands.Add(new PluginCommand(
+                Irc.MessageType.All,
+                "load",
+                "Loads a plugin.",
+                new CommandDelegate(public_lsc),
+                new[] {
+                    new { Name = "pluginname", Value = typeof(String) }
+                }
+                ));
+            Commands.Add(new PluginCommand(
+                Irc.MessageType.All,
+                "unload",
+                "Unlads a plugin.",
+                new CommandDelegate(public_lsc),
+                new[] {
+                    new { Name = "pluginname", Value = typeof(String) }
+                }
+                ));
+        }
+
+        public void public_ls(IcebotCommand cmd)
         {
             List<string> allNames = new List<string>();
 
@@ -50,7 +91,7 @@ namespace Icebot.InternalPlugins
                 Channel.SendMessage("No plugins loaded");
         }
 
-        public void public_lsc()
+        public void public_lsc(IcebotCommand cmd)
         {
             if (Channel.Plugins.Length != 0)
                 Channel.SendMessage("Available channel plugins on this channel: "
@@ -61,7 +102,7 @@ namespace Icebot.InternalPlugins
                 Channel.SendMessage("No channel plugins loaded.");
         }
 
-        public void public_lss()
+        public void public_lss(IcebotCommand cmd)
         {
             if (Channel.Server.Plugins.Length != 0)
                 Channel.SendMessage("Available server plugins on this channel: "
