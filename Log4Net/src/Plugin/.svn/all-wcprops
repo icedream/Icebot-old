@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/repos/asf/!svn/ver/1165341/logging/log4net/trunk/src/Plugin
+END
+PluginMap.cs
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Plugin/PluginMap.cs
+END
+IPluginFactory.cs
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Plugin/IPluginFactory.cs
+END
+PluginSkeleton.cs
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Plugin/PluginSkeleton.cs
+END
+IPlugin.cs
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Plugin/IPlugin.cs
+END
+RemoteLoggingServerPlugin.cs
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/repos/asf/!svn/ver/1165341/logging/log4net/trunk/src/Plugin/RemoteLoggingServerPlugin.cs
+END
+PluginCollection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Plugin/PluginCollection.cs
+END

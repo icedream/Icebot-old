@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/examples/net/2.0/Appenders/WmiAppender/cs/src
+END
+AssemblyInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/WmiAppender/cs/src/AssemblyInfo.cs
+END
+WmiAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/WmiAppender/cs/src/WmiAppender.cs
+END
+IWmiBoundEvent.cs
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/WmiAppender/cs/src/IWmiBoundEvent.cs
+END
+WmiLoggingEvent.cs
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/WmiAppender/cs/src/WmiLoggingEvent.cs
+END
+WmiAppender.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/examples/net/2.0/Appenders/WmiAppender/cs/src/WmiAppender.csproj
+END
+WmiInstaller.cs
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/WmiAppender/cs/src/WmiInstaller.cs
+END
+WmiLayout.cs
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/WmiAppender/cs/src/WmiLayout.cs
+END

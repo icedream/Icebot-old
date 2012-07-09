@@ -1,0 +1,10 @@
+K 16
+bugtraq:logregex
+V 14
+(LOG4NET-\d+)
+
+K 11
+bugtraq:url
+V 44
+http://issues.apache.org/jira/browse/%BUGID%
+END

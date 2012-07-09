@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/asf/!svn/ver/1345560/logging/log4net/trunk/src/Repository/Hierarchy
+END
+DefaultLoggerFactory.cs
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Repository/Hierarchy/DefaultLoggerFactory.cs
+END
+Hierarchy.cs
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repos/asf/!svn/ver/1345560/logging/log4net/trunk/src/Repository/Hierarchy/Hierarchy.cs
+END
+ProvisionNode.cs
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Repository/Hierarchy/ProvisionNode.cs
+END
+Logger.cs
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/asf/!svn/ver/1172969/logging/log4net/trunk/src/Repository/Hierarchy/Logger.cs
+END
+ILoggerFactory.cs
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Repository/Hierarchy/ILoggerFactory.cs
+END
+XmlHierarchyConfigurator.cs
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Repository/Hierarchy/XmlHierarchyConfigurator.cs
+END
+RootLogger.cs
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Repository/Hierarchy/RootLogger.cs
+END
+LoggerKey.cs
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Repository/Hierarchy/LoggerKey.cs
+END

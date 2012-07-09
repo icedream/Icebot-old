@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/asf/!svn/ver/1170497/logging/log4net/trunk/tests/src/Util
+END
+TransformTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/asf/!svn/ver/1167144/logging/log4net/trunk/tests/src/Util/TransformTest.cs
+END
+RandomStringPatternConverterTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/tests/src/Util/RandomStringPatternConverterTest.cs
+END
+CyclicBufferTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/tests/src/Util/CyclicBufferTest.cs
+END
+SystemInfoTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/asf/!svn/ver/1170497/logging/log4net/trunk/tests/src/Util/SystemInfoTest.cs
+END
+PropertiesDictionaryTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/tests/src/Util/PropertiesDictionaryTest.cs
+END
+LogLogTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/asf/!svn/ver/1165671/logging/log4net/trunk/tests/src/Util/LogLogTest.cs
+END
+PatternStringTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/tests/src/Util/PatternStringTest.cs
+END
+PatternConverterTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/tests/src/Util/PatternConverterTest.cs
+END
+EnvironmentPatternConverterTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/repos/asf/!svn/ver/1165680/logging/log4net/trunk/tests/src/Util/EnvironmentPatternConverterTest.cs
+END

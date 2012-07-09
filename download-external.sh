@@ -10,5 +10,4 @@ svn checkout http://svn.apache.org/repos/asf/logging/log4net/trunk Log4Net
 #cd ..
 #fossil sync
 
-echo.
 echo Finished.

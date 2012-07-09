@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/asf/!svn/ver/1173083/logging/log4net/trunk/tests/src/Appender
+END
+TraceAppenderTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/tests/src/Appender/TraceAppenderTest.cs
+END
+EventLogAppenderTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/repos/asf/!svn/ver/1170428/logging/log4net/trunk/tests/src/Appender/EventLogAppenderTest.cs
+END
+RemotingAppenderTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/repos/asf/!svn/ver/1166042/logging/log4net/trunk/tests/src/Appender/RemotingAppenderTest.cs
+END
+CountingAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/tests/src/Appender/CountingAppender.cs
+END
+RollingFileAppenderTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/asf/!svn/ver/1173083/logging/log4net/trunk/tests/src/Appender/RollingFileAppenderTest.cs
+END
+StringAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/tests/src/Appender/StringAppender.cs
+END
+BufferingAppenderTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/tests/src/Appender/BufferingAppenderTest.cs
+END
+AdoNetAppenderTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/tests/src/Appender/AdoNetAppenderTest.cs
+END

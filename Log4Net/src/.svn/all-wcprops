@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/repos/asf/!svn/ver/1345626/logging/log4net/trunk/src
+END
+LogManager.cs
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/LogManager.cs
+END
+ThreadContext.cs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/ThreadContext.cs
+END
+AssemblyVersionInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/AssemblyVersionInfo.cpp
+END
+Log4netAssemblyInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/asf/!svn/ver/1159843/logging/log4net/trunk/src/Log4netAssemblyInfo.cs
+END
+ILog.cs
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/ILog.cs
+END
+AssemblyInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/repos/asf/!svn/ver/1174174/logging/log4net/trunk/src/AssemblyInfo.cs
+END
+log4net.vs2010.sln
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/asf/!svn/ver/1165307/logging/log4net/trunk/src/log4net.vs2010.sln
+END
+log4net.vs2010.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/asf/!svn/ver/1239458/logging/log4net/trunk/src/log4net.vs2010.csproj
+END
+AssemblyVersionInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/AssemblyVersionInfo.cs
+END
+MDC.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/MDC.cs
+END
+AssemblyVersionInfo.vb
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/asf/!svn/ver/1159849/logging/log4net/trunk/src/AssemblyVersionInfo.vb
+END
+log4net.vs2008.sln
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/src/log4net.vs2008.sln
+END
+NDC.cs
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/NDC.cs
+END
+GlobalContext.cs
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/GlobalContext.cs
+END
+LogicalThreadContext.cs
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/LogicalThreadContext.cs
+END
+AssemblyVersionInfo.js
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/AssemblyVersionInfo.js
+END
+log4net.vs2008.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/asf/!svn/ver/1210987/logging/log4net/trunk/src/log4net.vs2008.csproj
+END

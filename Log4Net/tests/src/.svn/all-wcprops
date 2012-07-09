@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/asf/!svn/ver/1345560/logging/log4net/trunk/tests/src
+END
+AssemblyInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/tests/src/AssemblyInfo.cs
+END
+Utils.cs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/asf/!svn/ver/1166059/logging/log4net/trunk/tests/src/Utils.cs
+END
+log4net.Tests.vs2010.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repos/asf/!svn/ver/1239458/logging/log4net/trunk/tests/src/log4net.Tests.vs2010.csproj
+END
+log4net.Tests.vs2003.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repos/asf/!svn/ver/1210987/logging/log4net/trunk/tests/src/log4net.Tests.vs2003.csproj
+END
+log4net.Tests.vs2008.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repos/asf/!svn/ver/1210987/logging/log4net/trunk/tests/src/log4net.Tests.vs2008.csproj
+END

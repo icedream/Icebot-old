@@ -1,0 +1,10 @@
+K 10
+svn:ignore
+V 55
+bin
+obj
+log4net.xml
+*.csproj.user
+*.suo
+log4net.sln.old
+END

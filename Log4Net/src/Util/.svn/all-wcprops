@@ -1,0 +1,233 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/repos/asf/!svn/ver/1211480/logging/log4net/trunk/src/Util
+END
+ReadOnlyPropertiesDictionary.cs
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/repos/asf/!svn/ver/1165341/logging/log4net/trunk/src/Util/ReadOnlyPropertiesDictionary.cs
+END
+ConverterInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/src/Util/ConverterInfo.cs
+END
+LevelMapping.cs
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/LevelMapping.cs
+END
+EmptyDictionary.cs
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/EmptyDictionary.cs
+END
+LogicalThreadContextProperties.cs
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/repos/asf/!svn/ver/1209096/logging/log4net/trunk/src/Util/LogicalThreadContextProperties.cs
+END
+SystemStringFormat.cs
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/asf/!svn/ver/1172969/logging/log4net/trunk/src/Util/SystemStringFormat.cs
+END
+WindowsSecurityContext.cs
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/asf/!svn/ver/1165341/logging/log4net/trunk/src/Util/WindowsSecurityContext.cs
+END
+PatternParser.cs
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/PatternParser.cs
+END
+SystemInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/asf/!svn/ver/1169705/logging/log4net/trunk/src/Util/SystemInfo.cs
+END
+OptionConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/OptionConverter.cs
+END
+PatternString.cs
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/PatternString.cs
+END
+PatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/asf/!svn/ver/1169711/logging/log4net/trunk/src/Util/PatternConverter.cs
+END
+LevelMappingEntry.cs
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/LevelMappingEntry.cs
+END
+PropertyEntry.cs
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/src/Util/PropertyEntry.cs
+END
+ReaderWriterLock.cs
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/ReaderWriterLock.cs
+END
+EmptyCollection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/EmptyCollection.cs
+END
+Transform.cs
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/asf/!svn/ver/1167144/logging/log4net/trunk/src/Util/Transform.cs
+END
+NullEnumerator.cs
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/NullEnumerator.cs
+END
+AppenderAttachedImpl.cs
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/AppenderAttachedImpl.cs
+END
+CompositeProperties.cs
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/CompositeProperties.cs
+END
+PropertiesDictionary.cs
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/PropertiesDictionary.cs
+END
+GlobalContextProperties.cs
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/GlobalContextProperties.cs
+END
+TextWriterAdapter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/TextWriterAdapter.cs
+END
+LogLog.cs
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/LogLog.cs
+END
+ThreadContextStacks.cs
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/ThreadContextStacks.cs
+END
+ReusableStringWriter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/ReusableStringWriter.cs
+END
+FormattingInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/FormattingInfo.cs
+END
+QuietTextWriter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/QuietTextWriter.cs
+END
+ThreadContextProperties.cs
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/ThreadContextProperties.cs
+END
+ContextPropertiesBase.cs
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/ContextPropertiesBase.cs
+END
+OnlyOnceErrorHandler.cs
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/asf/!svn/ver/1211480/logging/log4net/trunk/src/Util/OnlyOnceErrorHandler.cs
+END
+CountingQuietTextWriter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/CountingQuietTextWriter.cs
+END
+CyclicBuffer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/CyclicBuffer.cs
+END
+NativeError.cs
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/asf/!svn/ver/1171558/logging/log4net/trunk/src/Util/NativeError.cs
+END
+NullDictionaryEnumerator.cs
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/NullDictionaryEnumerator.cs
+END
+ThreadContextStack.cs
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/ThreadContextStack.cs
+END
+NullSecurityContext.cs
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/NullSecurityContext.cs
+END
+ProtectCloseTextWriter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Util/ProtectCloseTextWriter.cs
+END

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/examples/net/2.0/Appenders/WmiAppender
+END
+nant.config
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/WmiAppender/nant.config
+END
+nant.build
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/repos/asf/!svn/ver/778064/logging/log4net/trunk/examples/net/2.0/Appenders/WmiAppender/nant.build
+END

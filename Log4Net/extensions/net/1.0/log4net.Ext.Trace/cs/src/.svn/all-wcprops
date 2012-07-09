@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.Trace/cs/src
+END
+AssemblyInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.Trace/cs/src/AssemblyInfo.cs
+END
+TraceLogManager.cs
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.Trace/cs/src/TraceLogManager.cs
+END
+TraceLogImpl.cs
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.Trace/cs/src/TraceLogImpl.cs
+END
+log4net.Ext.Trace.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.Trace/cs/src/log4net.Ext.Trace.csproj
+END
+ITraceLog.cs
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.Trace/cs/src/ITraceLog.cs
+END

@@ -1,0 +1,9 @@
+K 10
+svn:ignore
+V 26
+obj
+*.csproj.user
+bin
+doc
+
+END

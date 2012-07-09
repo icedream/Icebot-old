@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/2.0/Extensibility/TraceLogApp/cs/src
+END
+AssemblyInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/2.0/Extensibility/TraceLogApp/cs/src/AssemblyInfo.cs
+END
+TraceLogApp.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/2.0/Extensibility/TraceLogApp/cs/src/TraceLogApp.csproj
+END
+TraceLogApp.cs
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/2.0/Extensibility/TraceLogApp/cs/src/TraceLogApp.cs
+END
+TraceLogApp.exe.log4net
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/2.0/Extensibility/TraceLogApp/cs/src/TraceLogApp.exe.log4net
+END

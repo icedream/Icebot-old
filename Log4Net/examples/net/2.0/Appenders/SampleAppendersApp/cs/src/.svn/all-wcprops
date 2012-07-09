@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src
+END
+AssemblyInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/AssemblyInfo.cs
+END
+SampleAppendersApp.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/SampleAppendersApp.csproj
+END
+App.config
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/App.config
+END
+LoggingExample.cs
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/LoggingExample.cs
+END

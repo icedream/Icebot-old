@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/asf/!svn/ver/1345626/logging/log4net/trunk/src/Layout/Pattern
+END
+IdentityPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/IdentityPatternConverter.cs
+END
+UtcDatePatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/UtcDatePatternConverter.cs
+END
+AspNetPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/asf/!svn/ver/1159844/logging/log4net/trunk/src/Layout/Pattern/AspNetPatternConverter.cs
+END
+RelativeTimePatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/RelativeTimePatternConverter.cs
+END
+FullLocationPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/FullLocationPatternConverter.cs
+END
+ExceptionPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/ExceptionPatternConverter.cs
+END
+AspNetSessionPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repos/asf/!svn/ver/1159844/logging/log4net/trunk/src/Layout/Pattern/AspNetSessionPatternConverter.cs
+END
+AspNetContextPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repos/asf/!svn/ver/1159844/logging/log4net/trunk/src/Layout/Pattern/AspNetContextPatternConverter.cs
+END
+AspNetRequestPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repos/asf/!svn/ver/1345626/logging/log4net/trunk/src/Layout/Pattern/AspNetRequestPatternConverter.cs
+END
+NdcPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/NdcPatternConverter.cs
+END
+LevelPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/LevelPatternConverter.cs
+END
+StackTraceDetailPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repos/asf/!svn/ver/1171552/logging/log4net/trunk/src/Layout/Pattern/StackTraceDetailPatternConverter.cs
+END
+ThreadPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/ThreadPatternConverter.cs
+END
+FileLocationPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/FileLocationPatternConverter.cs
+END
+AppDomainPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/AppDomainPatternConverter.cs
+END
+MethodLocationPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/MethodLocationPatternConverter.cs
+END
+DatePatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/DatePatternConverter.cs
+END
+PatternLayoutConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/PatternLayoutConverter.cs
+END
+AspNetCachePatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/repos/asf/!svn/ver/1159844/logging/log4net/trunk/src/Layout/Pattern/AspNetCachePatternConverter.cs
+END
+LoggerPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/LoggerPatternConverter.cs
+END
+UserNamePatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/UserNamePatternConverter.cs
+END
+LineLocationPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/LineLocationPatternConverter.cs
+END
+TypeNamePatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/TypeNamePatternConverter.cs
+END
+MessagePatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/MessagePatternConverter.cs
+END
+NamedPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repos/asf/!svn/ver/1170104/logging/log4net/trunk/src/Layout/Pattern/NamedPatternConverter.cs
+END
+PropertyPatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Layout/Pattern/PropertyPatternConverter.cs
+END
+StackTracePatternConverter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/repos/asf/!svn/ver/1171552/logging/log4net/trunk/src/Layout/Pattern/StackTracePatternConverter.cs
+END

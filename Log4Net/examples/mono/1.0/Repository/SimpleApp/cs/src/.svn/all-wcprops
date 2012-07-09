@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/mono/1.0/Repository/SimpleApp/cs/src
+END
+AssemblyInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/mono/1.0/Repository/SimpleApp/cs/src/AssemblyInfo.cs
+END
+EntryPoint.cs
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/mono/1.0/Repository/SimpleApp/cs/src/EntryPoint.cs
+END
+App.config
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/examples/mono/1.0/Repository/SimpleApp/cs/src/App.config
+END
+SimpleApp.exe.log4net
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/mono/1.0/Repository/SimpleApp/cs/src/SimpleApp.exe.log4net
+END

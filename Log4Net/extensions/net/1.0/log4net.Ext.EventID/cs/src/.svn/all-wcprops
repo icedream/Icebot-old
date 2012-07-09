@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.EventID/cs/src
+END
+AssemblyInfo.cs
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.EventID/cs/src/AssemblyInfo.cs
+END
+EventIDLogManager.cs
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.EventID/cs/src/EventIDLogManager.cs
+END
+EventIDLogImpl.cs
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.EventID/cs/src/EventIDLogImpl.cs
+END
+log4net.Ext.EventID.csproj
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.EventID/cs/src/log4net.Ext.EventID.csproj
+END
+IEventIDLog.cs
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/extensions/net/1.0/log4net.Ext.EventID/cs/src/IEventIDLog.cs
+END

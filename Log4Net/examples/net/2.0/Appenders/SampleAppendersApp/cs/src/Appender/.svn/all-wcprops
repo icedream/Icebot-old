@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/Appender
+END
+AsyncAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/Appender/AsyncAppender.cs
+END
+MessageBoxAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/Appender/MessageBoxAppender.cs
+END
+MsmqAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/Appender/MsmqAppender.cs
+END
+PatternFileAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/Appender/PatternFileAppender.cs
+END
+SimpleSmtpAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/Appender/SimpleSmtpAppender.cs
+END
+MessageObjectExpanderAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/Appender/MessageObjectExpanderAppender.cs
+END
+FastDbAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/Appender/FastDbAppender.cs
+END
+PatternLayoutAdoNetAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/Appender/PatternLayoutAdoNetAppender.cs
+END
+FireEventAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/Appender/FireEventAppender.cs
+END
+PatternLayoutAdoNetAppenderParameter.cs
+K 25
+svn:wc:ra_dav:version-url
+V 151
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/examples/net/2.0/Appenders/SampleAppendersApp/cs/src/Appender/PatternLayoutAdoNetAppenderParameter.cs
+END

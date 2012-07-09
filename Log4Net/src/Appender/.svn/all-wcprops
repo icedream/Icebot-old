@@ -1,0 +1,179 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/repos/asf/!svn/ver/1244125/logging/log4net/trunk/src/Appender
+END
+RemoteSyslogAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/RemoteSyslogAppender.cs
+END
+OutputDebugStringAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repos/asf/!svn/ver/1171558/logging/log4net/trunk/src/Appender/OutputDebugStringAppender.cs
+END
+SmtpPickupDirAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/SmtpPickupDirAppender.cs
+END
+TraceAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/TraceAppender.cs
+END
+NetSendAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/asf/!svn/ver/1165341/logging/log4net/trunk/src/Appender/NetSendAppender.cs
+END
+ForwardingAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/ForwardingAppender.cs
+END
+ConsoleAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/ConsoleAppender.cs
+END
+IBulkAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/IBulkAppender.cs
+END
+RollingFileAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/repos/asf/!svn/ver/1171559/logging/log4net/trunk/src/Appender/RollingFileAppender.cs
+END
+MemoryAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/asf/!svn/ver/1166569/logging/log4net/trunk/src/Appender/MemoryAppender.cs
+END
+AspNetTraceAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/AspNetTraceAppender.cs
+END
+ColoredConsoleAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/repos/asf/!svn/ver/1165341/logging/log4net/trunk/src/Appender/ColoredConsoleAppender.cs
+END
+AdoNetAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/asf/!svn/ver/1198796/logging/log4net/trunk/src/Appender/AdoNetAppender.cs
+END
+BufferingAppenderSkeleton.cs
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/BufferingAppenderSkeleton.cs
+END
+FileAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/asf/!svn/ver/1174821/logging/log4net/trunk/src/Appender/FileAppender.cs
+END
+TextWriterAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/TextWriterAppender.cs
+END
+EventLogAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/asf/!svn/ver/1170192/logging/log4net/trunk/src/Appender/EventLogAppender.cs
+END
+SmtpAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/asf/!svn/ver/1166665/logging/log4net/trunk/src/Appender/SmtpAppender.cs
+END
+AppenderSkeleton.cs
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/asf/!svn/ver/1169711/logging/log4net/trunk/src/Appender/AppenderSkeleton.cs
+END
+RemotingAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/asf/!svn/ver/1165341/logging/log4net/trunk/src/Appender/RemotingAppender.cs
+END
+AnsiColorTerminalAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repos/asf/!svn/ver/1197625/logging/log4net/trunk/src/Appender/AnsiColorTerminalAppender.cs
+END
+DebugAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/DebugAppender.cs
+END
+ManagedColoredConsoleAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/asf/!svn/ver/1244125/logging/log4net/trunk/src/Appender/ManagedColoredConsoleAppender.cs
+END
+IAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/IAppender.cs
+END
+UdpAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/UdpAppender.cs
+END
+BufferingForwardingAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/BufferingForwardingAppender.cs
+END
+LocalSyslogAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/repos/asf/!svn/ver/1165341/logging/log4net/trunk/src/Appender/LocalSyslogAppender.cs
+END
+AppenderCollection.cs
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/AppenderCollection.cs
+END
+TelnetAppender.cs
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/Appender/TelnetAppender.cs
+END

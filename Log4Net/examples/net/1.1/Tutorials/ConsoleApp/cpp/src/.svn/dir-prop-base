@@ -1,0 +1,9 @@
+K 10
+svn:ignore
+V 58
+ConsoleApp.ncb
+ConsoleApp.sln
+ConsoleApp.suo
+Debug
+Release
+END

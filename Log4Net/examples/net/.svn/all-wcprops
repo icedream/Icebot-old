@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net
+END
+nant.config
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/nant.config
+END
+nant.build
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/nant.build
+END

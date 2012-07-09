@@ -1,0 +1,9 @@
+K 10
+svn:ignore
+V 63
+bin
+obj
+log4net.xml
+EventIDLogApp.csproj.user
+EventIDLogApp.suo
+END

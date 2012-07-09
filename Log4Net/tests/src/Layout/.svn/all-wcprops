@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/asf/!svn/ver/1210987/logging/log4net/trunk/tests/src/Layout
+END
+PatternLayoutTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repos/asf/!svn/ver/1210987/logging/log4net/trunk/tests/src/Layout/PatternLayoutTest.cs
+END
+XmlLayoutTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/asf/!svn/ver/1187391/logging/log4net/trunk/tests/src/Layout/XmlLayoutTest.cs
+END
+DynamicPatternLayoutTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/asf/!svn/ver/1210987/logging/log4net/trunk/tests/src/Layout/DynamicPatternLayoutTest.cs
+END

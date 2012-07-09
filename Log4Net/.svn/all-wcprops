@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/repos/asf/!svn/ver/1345626/logging/log4net/trunk
+END
+NOTICE
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/repos/asf/!svn/ver/1239459/logging/log4net/trunk/NOTICE
+END
+STATUS.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/repos/asf/!svn/ver/1177577/logging/log4net/trunk/STATUS.txt
+END
+build.cmd
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/build.cmd
+END
+LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/LICENSE
+END
+log4net.snk.readme
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/asf/!svn/ver/1167050/logging/log4net/trunk/log4net.snk.readme
+END
+log4net.snk
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/repos/asf/!svn/ver/1166722/logging/log4net/trunk/log4net.snk
+END
+pom.xml
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repos/asf/!svn/ver/1293760/logging/log4net/trunk/pom.xml
+END
+log4net.build
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/asf/!svn/ver/1293760/logging/log4net/trunk/log4net.build
+END
+KEYS
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/repos/asf/!svn/ver/1169726/logging/log4net/trunk/KEYS
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/README.txt
+END
+log4net.include
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/asf/!svn/ver/1177240/logging/log4net/trunk/log4net.include
+END
+old-log4net.snk.gpg
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/repos/asf/!svn/ver/1171887/logging/log4net/trunk/old-log4net.snk.gpg
+END

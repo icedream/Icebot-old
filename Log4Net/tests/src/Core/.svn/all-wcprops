@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/asf/!svn/ver/1166068/logging/log4net/trunk/tests/src/Core
+END
+ShutdownTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/tests/src/Core/ShutdownTest.cs
+END
+StringFormatTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/asf/!svn/ver/1158529/logging/log4net/trunk/tests/src/Core/StringFormatTest.cs
+END
+EvaluatorTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/tests/src/Core/EvaluatorTest.cs
+END
+FixingTest.cs
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/asf/!svn/ver/1166068/logging/log4net/trunk/tests/src/Core/FixingTest.cs
+END

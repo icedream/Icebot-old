@@ -1,0 +1,9 @@
+K 10
+svn:ignore
+V 71
+bin
+obj
+log4net.xml
+log4net.Ext.Trace.csproj.user
+log4net.Ext.Trace.suo
+END

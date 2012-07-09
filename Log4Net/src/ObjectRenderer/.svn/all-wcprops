@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/ObjectRenderer
+END
+DefaultRenderer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/ObjectRenderer/DefaultRenderer.cs
+END
+RendererMap.cs
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/ObjectRenderer/RendererMap.cs
+END
+IObjectRenderer.cs
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/src/ObjectRenderer/IObjectRenderer.cs
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/1.1/Tutorials/ConsoleApp/cpp/src
+END
+App.config
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/examples/net/1.1/Tutorials/ConsoleApp/cpp/src/App.config
+END
+ConsoleApp.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/1.1/Tutorials/ConsoleApp/cpp/src/ConsoleApp.cpp
+END
+ConsoleApp.vcproj
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/repos/asf/!svn/ver/1158536/logging/log4net/trunk/examples/net/1.1/Tutorials/ConsoleApp/cpp/src/ConsoleApp.vcproj
+END
+AssemblyInfo.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/repos/asf/!svn/ver/1164961/logging/log4net/trunk/examples/net/1.1/Tutorials/ConsoleApp/cpp/src/AssemblyInfo.cpp
+END
