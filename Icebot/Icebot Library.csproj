@@ -5,15 +5,14 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{02084950-34EE-4A85-8CB2-6CF508568880}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{163DC55E-F47E-4CB7-AEAF-66EE941AE4FD}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Icebot</RootNamespace>
-    <AssemblyName>Icebot</AssemblyName>
+    <AssemblyName>icebot</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -21,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PLUGIN_PLUGINLIST,PLUGIN_VERSION</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -30,61 +29,53 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;PLUGIN_PLUGINLIST,PLUGIN_VERSION</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:\Libs\JSON\Bin\Net35\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Hostmask.cs" />
+    <Compile Include="Api\IcebotCommand.cs" />
+    <Compile Include="Api\IcebotPlugin.cs" />
+    <Compile Include="Api\IcebotPluginSettings.cs" />
+    <Compile Include="Api\IcebotCommandDeclaration.cs" />
+    <Compile Include="Bot\ChannelListener.cs" />
+    <Compile Include="Bot\IcebotChannelSettings.cs" />
+    <Compile Include="Bot\IrcListener.cs" />
+    <Compile Include="Databases\BasicDatabase.cs" />
+    <Compile Include="EventArgs.cs" />
     <Compile Include="Icebot.cs" />
-    <Compile Include="IcebotChannel.cs" />
-    <Compile Include="IcebotCommand.cs" />
-    <Compile Include="IcebotConfiguration.cs" />
-    <Compile Include="Api\Plugin.cs" />
-    <Compile Include="IcebotServer.cs" />
-    <Compile Include="InternalPlugins\PluginList.cs" />
+    <Compile Include="Interfaces\AntiSpam.cs" />
+    <Compile Include="InternalPlugins\Help.cs" />
+    <Compile Include="InternalPlugins\PluginManager.cs" />
     <Compile Include="InternalPlugins\Version.cs" />
-    <Compile Include="Irc\ChannelInfo.cs" />
-    <Compile Include="Irc\Message.cs" />
-    <Compile Include="Irc\Mode.cs" />
-    <Compile Include="Irc\RenamedUser.cs" />
-    <Compile Include="Irc\Reply.cs" />
-    <Compile Include="Irc\NumericReply.cs" />
-    <Compile Include="Irc\Rfc2812\Commands.cs" />
-    <Compile Include="Irc\Numeric.cs" />
-    <Compile Include="Irc\Rfc2812\Validation.cs" />
-    <Compile Include="Irc\RfcCommandsDefinition.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Irc\IrcChannel.cs" />
+    <Compile Include="Irc\IrcClient.cs" />
+    <Compile Include="Irc\IrcLayer.cs" />
+    <Compile Include="Irc\IrcMessageType.cs" />
+    <Compile Include="Irc\IrcNumerics.cs" />
+    <Compile Include="Irc\IrcServerInfo.cs" />
+    <Compile Include="Irc\IrcUser.cs" />
+    <Compile Include="Interfaces\HttpServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Irc\User.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Icebot.xml.scratch">
-      <SubType>Designer</SubType>
-    </None>
-    <EmbeddedResource Include="Log4NetStandard.xml" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
+    <Content Include="log4net.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Log4Net\src\log4net.vs2010.csproj">
@@ -93,10 +84,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Events.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="LICENSE.txt" />
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

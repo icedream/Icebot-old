@@ -1,114 +1,244 @@
-﻿/**
- * Icebot - Extensible, multi-functional C# IRC bot
- * Copyright (C) 2012 Carl Kittelberger
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
 using System.Reflection;
+using System.IO;
 using System.Xml;
-using log4net;
-using log4net.Core;
+using System.Xml.Serialization;
+using System.Xml.Linq;
+using Icebot.Bot;
+using Icebot.Api;
 
 namespace Icebot
 {
+    /// <summary>
+    /// The Icebot host, which can host multiple IrcListeners.
+    /// </summary>
     public class Icebot
     {
+        List<IrcListener> _ircListeners = new List<IrcListener>();
+        List<ChannelListener> _channelListeners = new List<ChannelListener>();
+        List<IcebotBasePlugin> _loadedPlugins = new List<IcebotBasePlugin>();
+
         public Icebot()
         {
-            __CONSTRUCT(_defaultConfigurationFile);
+            _ircListeners = new List<IrcListener>();
         }
 
-        public IcebotConfiguration config = new IcebotConfiguration();
-
-        internal List<IcebotServer> servers = new List<IcebotServer>();
-
-        internal static Assembly _asm
+        public void Start()
         {
-            get { return Assembly.GetExecutingAssembly(); }
+            foreach (var server in _ircListeners)
+                server.Start();
+        }
+        public void Stop()
+        {
+            foreach (var server in _ircListeners)
+                server.Stop();
         }
 
-        private string _defaultConfigurationFile
+        public ChannelListener GetChannelListener(IrcListener server, string channelName)
         {
-            get { return _asm.FullName + ".xml"; }
+            var cl =
+                from c in _channelListeners
+                where c.ChannelName.Equals(channelName, StringComparison.OrdinalIgnoreCase)
+                && c.Server == server
+                select c;
+            //if (cl.Count() > 1) throw new MultipleResultsFoundException("Multiple channels found.");
+            if (cl.Count() == 0) throw new NoResultsFoundException("No channels found.");
+
+            return cl.First();
+        }
+        public ChannelListener[] GetChannelListeners(IrcListener server)
+        {
+            var cl =
+                from c in _channelListeners
+                where c.Server == server
+                select c;
+
+            return cl.ToArray<ChannelListener>();
+        }
+        public ChannelListener CreateChannelListener(IrcListener server, string channelName)
+        {
+            var cl = new ChannelListener(server, channelName);
+        }
+        public IrcListener GetIrcListener(string hostname, int port)
+        {
+            var il = GetIrcListeners(hostname, port);
+
+            //if(il.Count() > 1) throw new MultipleResultsFoundException("Multiple servers found.");
+            if (il.Count() == 0) throw new NoResultsFoundException("No servers found.");
+
+            return il.First();
+        }
+        public IrcListener[] GetIrcListeners(string hostname, int port)
+        {
+            var il =
+                from s in _ircListeners
+                where s.Hostname.Equals(hostname, StringComparison.OrdinalIgnoreCase)
+                && s.Port == port
+                select s;
+
+            return il.ToArray<IrcListener>();
+        }
+        public IrcListener GetIrcListener(string hostname)
+        {
+            var il = GetIrcListeners(hostname);
+
+            //if(il.Count() > 1) throw new MultipleResultsFoundException("Multiple servers found.");
+            if (il.Count() == 0) throw new NoResultsFoundException("No servers found.");
+
+            return il.First();
+        }
+        public IrcListener[] GetIrcListeners(string hostname)
+        {
+            var il =
+                from s in _ircListeners
+                where s.Hostname.Equals(hostname, StringComparison.OrdinalIgnoreCase)
+                select s;
+
+            return il.ToArray<IrcListener>();
+        }
+        public IrcListener CreateIrcListener(string hostname, int port = 6667)
+        {
+            var listener = new IrcListener();
+            listener.Hostname = hostname;
+            listener.Port = 6667;
+            listener.Irc.NumericReceived += new EventHandler<IrcNumericReplyEventArgs>(Irc_NumericReceived);
+            _ircListeners.Add(listener);
+            return listener;
+        }
+        public void RemoveIrcListener(IrcListener listener)
+        {
+            foreach (var c in from cl in _channelListeners where cl.Server == listener select cl)
+                c.Stop();
+            listener.Stop();
+        }
+        public void RemoveIrcListener(string hostname, int port = -1)
+        {
+            foreach (var i in from il in _ircListeners where il.Hostname == hostname && (port > 0 ? il.Port == port : true) select il)
+                RemoveIrcListener(i);
         }
 
-        private void __CONSTRUCT(string configuration)
+        void Irc_NumericReceived(object sender, IrcNumericReplyEventArgs e)
         {
-        }
+            IrcListener listener = sender as IrcListener;
 
-        public void LoadConfig(string filename)
-        {
-            LoadLogEngine(filename);
-            XmlReaderSettings setup = new XmlReaderSettings();
-            setup.ConformanceLevel = ConformanceLevel.Document;
-            setup.IgnoreComments = true;
-            setup.DtdProcessing = DtdProcessing.Ignore;
-            setup.CloseInput = true;
-            XmlReader r = XmlReader.Create(filename, setup);
-            while (r.Read() && r.Name != "icebot" && !r.EOF) { }
-            if (r.EOF)
+            if (e.Numeric == Irc.IrcNumericMethod.RPL_WELCOME)
             {
-                _log.Error("Didn't find a valid icebot configuration in the config file.");
-                throw new Exception();
+                foreach (var c in from cl in _channelListeners where cl.Server == listener select cl)
+                    c.Start();
             }
-            else
+        }
+
+        internal log4net.ILog Log { get { return log4net.LogManager.GetLogger("Icebot"); } }
+
+        public void UnloadPlugin(string pluginName)
+        {
+            (
+                from p in _loadedPlugins
+                where p.GetType().Name.Equals(pluginName, StringComparison.OrdinalIgnoreCase)
+                select p
+                ).First().Dispose();
+        }
+        public bool IsPluginLoaded(string pluginName)
+        {
+            return (
+                from p in _loadedPlugins
+                where p.GetType().Name.Equals(pluginName, StringComparison.OrdinalIgnoreCase)
+                select p
+                ).Count() > 0;
+        }
+        public void LoadPlugin(string pluginName)
+        {
+            DirectoryInfo pluginDir = new DirectoryInfo("plugins");
+            LoadPluginFromAssembly(Assembly.GetExecutingAssembly(), pluginName);
+            foreach (var file in pluginDir.EnumerateFiles("*.dll", SearchOption.TopDirectoryOnly))
             {
-                config = IcebotConfiguration.Deserialize(r);
-                r.Close();
-                _log.Info("Loaded icebot configuration.");
+                try
+                {
+                    LoadPluginFromAssembly(file.FullName, pluginName);
+                }
+                catch { { } }
             }
         }
-
-        private void LoadLogEngine(string filename)
+        public void LoadPlugin(IcebotBasePlugin plugin)
         {
-            // Loading log engine
-            log4net.Config.XmlConfigurator.Configure(new FileInfo(filename));
-            _log.Info("Log engine loaded.");
+            // Already loaded?
+            if (IsPluginLoaded(plugin.GetType().Name))
+                throw new Exception("Plugin already loaded.");
+
+            _loadedPlugins.Add(plugin);
         }
-
-        protected ILog _log
+        internal void LoadPlugin(Type pluginType)
         {
-            get { return LogManager.GetLogger(this.GetType().Name); }
-        }
+            // TODO: Support for multiple instances of a plugin.
+            try
+            {
+                var plugin = (IcebotBasePlugin)Activator.CreateInstance(pluginType);
 
-        public void Connect()
-        {
-            if (servers.Count != 0)
+                LoadPlugin(plugin);
+            }
+            catch (Exception e)
+            {
+                Log.Warn("Could not load plugin \"" + pluginType.Name + "\": " + e.Message);
                 return;
-            foreach (IcebotServerConfiguration s in config.Servers)
-            {
-                IcebotServer serv = new IcebotServer(this, s);
-                servers.Add(serv);
-                serv.Connect();
             }
         }
-
-        public void Disconnect()
+        public void LoadPluginsFromAssembly(string assemblyFile)
         {
-            foreach (IcebotServer s in servers)
-            {
-                s.Disconnect();
-                servers.Remove(s);
-            }
+            LoadPluginsFromAssembly(Assembly.LoadFrom(assemblyFile));
         }
+        public void LoadPluginsFromAssembly(Assembly assembly)
+        {
+            var plugins =
+                from t in assembly.GetTypes()
+                where t.IsSubclassOf(typeof(IcebotBasePlugin))
+                && !t.IsAbstract // Even needed?
+                select t;
+
+            foreach (var pl in plugins)
+                LoadPlugin(pl);
+        }
+        public void LoadPluginFromAssembly(string assemblyFile, string pluginname)
+        {
+            LoadPluginFromAssembly(Assembly.LoadFrom(assemblyFile, pluginname));
+        }
+        public void LoadPluginFromAssembly(Assembly assembly, string pluginname)
+        {
+            var plugins =
+                from t in assembly.GetTypes()
+                where t.IsSubclassOf(typeof(IcebotBasePlugin))
+                && !t.IsAbstract // Even needed?
+                && t.Name.Equals(pluginname, StringComparison.OrdinalIgnoreCase)
+                select t;
+
+            foreach (var pl in plugins)
+                LoadPlugin(pl);
+        }
+    }
+
+    [Serializable]
+    public class MultipleResultsFoundException : Exception
+    {
+        public MultipleResultsFoundException() { }
+        public MultipleResultsFoundException(string message) : base(message) { }
+        public MultipleResultsFoundException(string message, Exception inner) : base(message, inner) { }
+        protected MultipleResultsFoundException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
+    }
+
+    [Serializable]
+    public class NoResultsFoundException : Exception
+    {
+        public NoResultsFoundException() { }
+        public NoResultsFoundException(string message) : base(message) { }
+        public NoResultsFoundException(string message, Exception inner) : base(message, inner) { }
+        protected NoResultsFoundException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
     }
 }
