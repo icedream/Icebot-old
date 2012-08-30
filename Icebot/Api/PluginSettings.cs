@@ -7,17 +7,17 @@ using System.Xml.Serialization;
 
 namespace Icebot.Api
 {
-    public class IcebotPluginSettings
+    public class PluginSettings
     {
         [XmlAttribute("name")]
         public string Name { get; set; }
 
         [XmlArray("settings")]
         [XmlArrayItem("setting")]
-        public List<IcebotPluginSetting> Configuration { get; set; }
+        public List<PluginSetting> Configuration { get; set; }
     }
 
-    public class IcebotPluginSetting
+    public class PluginSetting
     {
         [XmlAttribute("name")]
         public string Name { get; set; }

@@ -33,12 +33,23 @@ namespace Icebot.InternalPlugins
     {
         public override void Run()
         {
-            Server.RegisterCommand(new IcebotCommandDeclaration(
-                Plugin: this,
+            RegisterCommand(new CommandDeclaration(
                 Name: "version",
-                MessageType: Irc.IrcMessageType.All, // "/ctcp Icebot VERSION", "!version" and "/msg Icebot VERSION"
+                MessageType: Irc.IrcMessageType.PublicMessage,
                 Description: "Displays the bot's version",
-                Callback: new IcebotCommandDelegate(cmd_Version)
+                Callback: new EventHandler<IcebotCommandEventArgs>(version_public)
+            ));
+            RegisterCommand(new CommandDeclaration(
+                Name: "version",
+                MessageType: Irc.IrcMessageType.Private,
+                Description: "Returns the bot version in a private message",
+                Callback: new EventHandler<IcebotCommandEventArgs>(version_private)
+            ));
+            RegisterCommand(new CommandDeclaration(
+                Name: "version",
+                MessageType: Irc.IrcMessageType.CtcpRequest,
+                Description: "Returns the bot version as a CTCP VERSION reply",
+                Callback: new EventHandler<IcebotCommandEventArgs>(version_ctcp)
             ));
             base.Run();
         }
@@ -58,15 +69,19 @@ namespace Icebot.InternalPlugins
             get { return ProgramName + " " + Version.ToString(); }
         }
 
-        private void cmd_Version(IcebotCommand cmd)
+        private void version_public(object o, IcebotCommandEventArgs cmd)
         {
-            // TODO: Version query
-            if (cmd.Target is Bot.ChannelListener)
-                ((Bot.ChannelListener)cmd.Target).SendMessage("Bot version is " + VersionString + ".");
-            else if (cmd.Type == Irc.IrcMessageType.CtcpRequest)
-                ((Bot.IrcListener)cmd.Target).Irc.SendCtcpReply(cmd.SenderNickname, "VERSION", VersionString);
-            else if (cmd.Type == Irc.IrcMessageType.Private)
-                ((Bot.IrcListener)cmd.Target).Irc.SendNotice(cmd.SenderNickname, "Bot version is " + VersionString + ".");
+            cmd.Channel.SendMessage(cmd.Command.Sender.Nickname + ", Bot version is " + VersionString + ".");
+        }
+
+        private void version_private(object o, IcebotCommandEventArgs cmd)
+        {
+            cmd.Command.Sender.SendNotice("Bot version is " + VersionString + ".");
+        }
+
+        private void version_ctcp(object o, IcebotCommandEventArgs cmd)
+        {
+            cmd.Server.Irc.SendCtcpReply(cmd.Command.SenderNickname, "VERSION", VersionString);
         }
     }
 }

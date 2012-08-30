@@ -25,7 +25,7 @@ namespace Icebot.Irc
         }
 
         // Private variables
-        private ILog _log;
+        protected ILog _log;
         private TcpClient _tcp = new TcpClient();
         private Stream _stream = null;
         private StreamReader _reader = null;

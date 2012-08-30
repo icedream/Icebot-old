@@ -7,34 +7,69 @@ using Icebot.Irc;
 
 namespace Icebot.Api
 {
-    public class IcebotCommand
+    /*
+    public class PluginCommand : Command
     {
-        public string Command { get; private set; }
+        public CommandDeclaration Declaration { get; private set; }
+        
+        internal PluginCommand(
+            CommandDeclaration d,
+            IrcMessageEventArgs e,
+            IrcListener server,
+            string prefix
+            )
+        {
+            Declaration = d;
+            __construct(e, server, prefix);
+        }
+    }
+     */
+
+    public class Command
+    {
+        public string CommandName { get; private set; }
         public string[] Arguments { get; private set; }
+        public IrcListener Server { get; private set; }
+        public IrcUser Sender { get; private set; }
         public string SenderMask { get; private set; }
         public string SenderNickname { get { return SenderMask.Split('!', '@')[0]; } }
         public string SenderUsername { get { return SenderMask.Split('!', '@')[1]; } }
         public string SenderHostname { get { return SenderMask.Split('!', '@')[2]; } }
-        public Irc.IrcMessageType Type { get; private set; }
+        public IrcMessageType Type { get; private set; }
 
-        public static bool IsValid(object o, IrcMessageEventArgs e)
+        public static bool IsValid(object o, IrcMessageEventArgs e, string prefix)
         {
-            if (!e.Text.StartsWith(GetPrefix(o, e)))
+            if (!e.Text.StartsWith(prefix))
                 return false;
 
-            try
-            {
-                new IcebotCommand(o, e);
-                return true;
-            }
-                // TODO: Make a cleaner bugfix for "crash on notice".
-            catch { return false; }
+            // TODO: "crash on notice"??????
+            return true;
         }
 
-        public IcebotCommand(IrcMessageEventArgs e, string prefix)
+        internal Command(
+            )
+        {
+        }
+
+        internal Command(
+            IrcMessageEventArgs e,
+            IrcListener server,
+            string prefix
+            )
+        {
+            __construct(e, server, prefix);
+        }
+
+        protected void __construct(
+            IrcMessageEventArgs e,
+            IrcListener server,
+            string prefix
+            )
         {
             Type = e.MessageType;
             SenderMask = e.SenderMask;
+            Server = server;
+            Sender = server.Irc.GetUserByNickname(SenderNickname);
 
             // Check if prefix is applicable
             if (prefix.Length > 0 && !e.Text.StartsWith(prefix))
@@ -47,12 +82,12 @@ namespace Icebot.Api
             // Parse command name
             if (t.Contains(' '))
             {
-                Command = t.Substring(0, t.IndexOf(' '));
-                t = t.Substring(Command.Length + 1);
+                CommandName = t.Substring(0, t.IndexOf(' '));
+                t = t.Substring(CommandName.Length + 1);
             }
             else
             {
-                Command = t;
+                CommandName = t;
                 t = "";
             }
 

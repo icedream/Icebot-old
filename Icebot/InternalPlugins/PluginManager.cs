@@ -35,71 +35,29 @@ namespace Icebot.InternalPlugins
 
         public override void Run()
         {
-            Server.RegisterCommand(new IcebotCommandDeclaration(
-                Plugin: this,
+            RegisterCommand(new CommandDeclaration(
                 Name: "ls",
                 MessageType: Irc.IrcMessageType.Public,
                 Description: "Lists all plugins enabled on this channel.",
-                Callback: new IcebotCommandDelegate(public_ls)
+                Callback: new EventHandler<IcebotCommandEventArgs>(public_ls)
             ));
-            Server.RegisterCommand(new IcebotCommandDeclaration(
-                Plugin: this,
-                Name: "lss",
-                MessageType: Irc.IrcMessageType.Public,
-                Description: "Lists all plugins which are available on this server.",
-                Callback: new IcebotCommandDelegate(public_lss)
-            ));
-            Server.RegisterCommand(new IcebotCommandDeclaration(
-                Plugin: this,
-                Name: "enable",
-                MessageType: Irc.IrcMessageType.Public,
-                Description: "Enables a plugin on a channel.",
-                Callback: new IcebotCommandDelegate(public_enable)
-            ));
-            Server.RegisterCommand(new IcebotCommandDeclaration(
-                Plugin: this,
-                Name: "disable",
-                MessageType: Irc.IrcMessageType.Public,
-                Description: "Disables a plugin on a channel.",
-                Callback: new IcebotCommandDelegate(public_disable)
-            ));
-
             base.Run();
         }
 
-        // TODO: Make this globally available or something like this
-        public string GetTargetName(IcebotCommand cmd)
-        {
-            return cmd.Target is Bot.IrcListener ? cmd.SenderNickname : Channel.Settings.Name;
-        }
-
-        public void public_ls(IcebotCommand cmd)
+        public void public_ls(object sender, IcebotCommandEventArgs cmd)
         {
             // Channel plugins
-
             var allNames =
-                (from p in Channel._attachedPlugins select p.GetType().Name);
+                (from p in cmd.Declaration.Host.GetEnabledPluginsOnChannel(cmd.Channel) select p.GetType().Name);
 
             if (allNames.Count() > 0)
-                Server.Irc.SendMessage(GetTargetName(cmd), "Enabled plugins on this channels: "
+                cmd.Command.Sender.SendNotice("Enabled plugins on this channels: "
                     + string.Join("; ", allNames)
                     + "."
                     );
             else
-                Server.Irc.SendMessage(GetTargetName(cmd), "No plugins enabled on this channel.");
+                cmd.Command.Sender.SendNotice("No plugins enabled on this channel.");
         }
 
-        public void public_lss(IcebotCommand cmd)
-        {
-            // Server plugins
-
-            if (Channel.Server.Plugins.Count > 0)
-                Server.Irc.SendMessage(GetTargetName(cmd), "Available plugins on this server: "
-                    + string.Join("; ", from p in Channel.Server.Plugins select p.GetType().Name)
-                    + "."
-                    );
-            else
-                Server.Irc.SendMessage(GetTargetName(cmd), "No plugins available.");
-        }
     }
 }
