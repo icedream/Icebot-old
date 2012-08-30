@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Icebot.Irc
+namespace Icedream.Icebot
 {
     /// <summary>
     /// Complete ISUPPORT implementation for server
     /// information.
     /// </summary>
-    public class IrcServerInfo
+    public class ServerInfo
     {
         /// <summary>
         /// The raw table with all ISUPPORTs of the server.
@@ -20,13 +20,13 @@ namespace Icebot.Irc
         {
             ISupportList.Clear();
         }
-        internal void ParseISupportLine(IrcNumericReplyEventArgs reply)
+        internal void ParseISupportLine(IrcNumericMessageEventArgs reply)
         {
             if (reply.Numeric == IrcNumericMethod.RPL_ISUPPORT)
             {
-                foreach (string sl in reply.Parameters)
+                foreach (string sl in reply.Arguments)
                 {
-                    if (sl == reply.Parameters.Last())
+                    if (sl == reply.Arguments.Last())
                         break; // ":is supported by the server", useless trash
                     string name = sl;
                     string value = "True";
@@ -40,8 +40,8 @@ namespace Icebot.Irc
             }
             else if (reply.Numeric == IrcNumericMethod.RPL_MYINFO)
             {
-                ServerName = reply.Parameters[0];
-                ServerVersion = reply.Parameters[1];
+                ServerName = reply.Arguments[0];
+                ServerVersion = reply.Arguments[1];
             }
         }
         internal bool IsISupport(IrcNumericReplyEventArgs reply)

@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 
 namespace Icebot.InternalPlugins
 {
-    public class Version : IcebotServerPlugin
+    public class VersionPlugin : IcebotServerPlugin
     {
         public override void Run()
         {
@@ -54,7 +54,7 @@ namespace Icebot.InternalPlugins
             base.Run();
         }
 
-        public System.Version Version
+        public Version VersionNumber
         {
             get { return Assembly.GetExecutingAssembly().GetName().Version; }
         }
@@ -66,7 +66,7 @@ namespace Icebot.InternalPlugins
 
         public string VersionString
         {
-            get { return ProgramName + " " + Version.ToString(); }
+            get { return ProgramName + " " + VersionNumber.ToString(); }
         }
 
         private void version_public(object o, IcebotCommandEventArgs cmd)

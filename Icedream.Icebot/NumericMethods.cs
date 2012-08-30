@@ -9,7 +9,7 @@ namespace Icedream.Icebot
     /// Represents all possible numerics which may
     /// be parsed.
     /// </summary>
-    public enum NumericMethod : short
+    public enum IrcNumericMethod : ushort
     {
         // reply codes
         RPL_WELCOME = 001,

@@ -46,7 +46,7 @@
     <Compile Include="Events\EventArgs.cs" />
     <Compile Include="MessageType.cs" />
     <Compile Include="NumericMethods.cs" />
-    <Compile Include="IrcServerInfo.cs" />
+    <Compile Include="ServerInfo.cs" />
     <Compile Include="Plugins\Version.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
