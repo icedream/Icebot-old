@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using Icebot.Api;
 using Icebot.Irc;
+using Icebot.Bot;
 
 namespace Icebot
 {
-    public class PluginEventArgs<T> : EventArgs where T : IcebotBasePlugin
+    public class PluginEventArgs<T> : EventArgs where T : Plugin
     {
         public T Plugin { get; internal set; }
 
@@ -168,11 +169,21 @@ namespace Icebot
 
     public class IcebotCommandEventArgs : EventArgs
     {
-        public IcebotCommand Command { get; private set; }
+        public Command Command { get; private set; }
+        public IrcListener Server { get; private set; }
+        public ChannelListener Channel { get; private set; }
+        public CommandDeclaration Declaration { get; internal set; }
 
-        public IcebotCommandEventArgs(IcebotCommand cmd)
+        internal IcebotCommandEventArgs(Command cmd, IrcListener server, CommandDeclaration declaration)
         {
             this.Command = cmd;
+            this.Server = server;
+        }
+        internal IcebotCommandEventArgs(Command cmd, IrcListener server, ChannelListener channel, CommandDeclaration declaration)
+        {
+            this.Command = cmd;
+            this.Server = server;
+            this.Channel = channel;
         }
     }
 }

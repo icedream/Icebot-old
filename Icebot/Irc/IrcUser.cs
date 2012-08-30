@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
+using Icebot.Bot;
 
 namespace Icebot.Irc
 {
@@ -12,6 +13,7 @@ namespace Icebot.Irc
         public string Username { get; internal set; }
         public string Hostname { get; internal set; }
         public string Realname { get; internal set; }
+        public IrcListener Server { get; internal set; }
 
         public bool IsAway { get; internal set; }
         public string AwayMessage { get; internal set; }
@@ -26,6 +28,15 @@ namespace Icebot.Irc
         public bool IsHostmaskMatch(string hostmask)
         { return new Regex("^" + hostmask.Replace("*", ".*") + "$", RegexOptions.IgnoreCase | RegexOptions.Singleline).IsMatch(hostmask); }
 
+        public void SendMessage(string message)
+        {
+            Server.Irc.SendMessage(Nickname, message);
+        }
+        public void SendNotice(string message)
+        {
+            Server.Irc.SendNotice(Nickname, message);
+        }
+
         public IrcUser()
         {
             Nickname = Username = Hostname = Realname = AwayMessage = null;
@@ -36,24 +47,34 @@ namespace Icebot.Irc
 
     public class IrcMaskedUser
     {
-        public IrcChannel Channel { get; internal set; }
+        public ChannelListener Channel { get; internal set; }
         public string Hostmask { get; internal set; }
         public string[] ExtraData { get; internal set; }
 
-        public IrcMaskedUser(IrcChannel c, string mask, string[] data)
+        public IrcMaskedUser(ChannelListener c, string mask, string[] data)
         {
-            Channel = c;
-            Hostmask = mask;
-            ExtraData = data;
+            this.Channel = c;
+            this.Hostmask = mask;
+            this.ExtraData = data;
         }
     }
 
-    public class IrcChannelUser
+    public class IrcChannelUser : IrcUser
     {
         public IrcUser User { get; internal set; }
-        public IrcServerInfo ServerInfo { get; internal set; }
+        //public IrcServerInfo ServerInfo { get; internal set; }
 
         public string Prefix { get; internal set; }
         public string Modes { get; internal set; } // TODO: Parse Modes so that the highest mode will decide which prefix the user gets in the channel
+
+        static IrcChannelUser FromUser(IrcUser user)
+        {
+            return new IrcChannelUser(user);
+        }
+
+        internal IrcChannelUser(IrcUser user)
+        {
+            User = user;
+        }
     }
 }

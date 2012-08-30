@@ -5,24 +5,24 @@ using System.Text;
 
 namespace Icebot.Api
 {
-    public class IcebotCommandDeclaration
+    public class CommandDeclaration
     {
         public string Name { get; internal set; }
         public string Description { get; internal set; }
         public string[] ArgumentNames { get; internal set; }
         public Type[] ArgumentTypes { get; internal set; }
         public Irc.IrcMessageType MessageType { get; internal set; }
-        public IcebotCommandDelegate Callback { get; internal set; }
-        public IcebotBasePlugin Plugin { get; internal set; }
+        public EventHandler<IcebotCommandEventArgs> Callback { get; internal set; }
+        public Plugin Plugin { get; internal set; }
+        public Icebot Host { get; internal set; }
 
-        public IcebotCommandDeclaration(
-            IcebotBasePlugin Plugin,
+        public CommandDeclaration(
             Irc.IrcMessageType MessageType,
             string Name,
             string Description = null,
             string[] ArgumentNames = null,
             Type[] ArgumentTypes = null, // Does not even work atm
-            IcebotCommandDelegate Callback = null
+            EventHandler<IcebotCommandEventArgs> Callback = null
             )
         {
 
@@ -33,7 +33,6 @@ namespace Icebot.Api
                 ArgumentTypes = new Type[0];
 
             this.MessageType = MessageType;
-            this.Plugin = Plugin;
             this.Description = Description;
             this.Name = Name;
             this.ArgumentNames = ArgumentNames;
@@ -41,6 +40,4 @@ namespace Icebot.Api
             this.Callback = Callback;
         }
     }
-
-    public delegate void IcebotCommandDelegate(Api.IcebotCommand command);
 }

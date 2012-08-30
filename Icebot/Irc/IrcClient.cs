@@ -11,13 +11,10 @@ namespace Icebot.Irc
         // Private variables
         private IrcServerInfo _serverInfo = new IrcServerInfo();
         private List<IrcUser> _knownUsers = new List<IrcUser>();
-        private List<IrcChannel> _buildingChannelList = new List<IrcChannel>();
-        private IrcChannel[] _knownChannels = new IrcChannel[0];
         private IrcUser _me = new IrcUser();
 
         // Public properties
         public IrcServerInfo ServerInfo { get { return _serverInfo; } }
-        public IrcChannel[] Channels { get { return _knownChannels.ToArray(); } }
         public IrcUser Me { get { return _me; } }
         
         // Events
@@ -55,23 +52,6 @@ namespace Icebot.Irc
                     {
                         var u = GetUserByNickname(e.Parameters[0]);
                         u.LastActivity = DateTime.Now.AddSeconds(-long.Parse(e.Parameters[1]));
-                    }
-                    break;
-                case IrcNumericMethod.RPL_WHOISCHANNELS:
-                    {
-                        string nick = e.Parameters[0];
-                        foreach (string channel in e.Parameters.Skip(1))
-                        {
-                            if(_serverInfo.SupportedChannelUserPrefixes.Contains(channel[0]))
-                            {
-                                var u = GetChannelUser(channel.Substring(1), nick);
-                                if(!u.Prefix.Contains(channel[0]))
-                                    u.Prefix += channel[0];
-                            } else {
-                                var u = GetChannelUser(channel, nick);
-                                u.Prefix = "";
-                            }
-                        }
                     }
                     break;
                 case IrcNumericMethod.RPL_MYINFO:
@@ -119,108 +99,8 @@ namespace Icebot.Irc
                 case IrcNumericMethod.RPL_ISUPPORT:
                     ServerInfo.ParseISupportLine(e);
                     break;
-                case IrcNumericMethod.RPL_LISTEND:
-                    _knownChannels = new IrcChannel[_buildingChannelList.Count];
-                    _buildingChannelList.CopyTo(_knownChannels);
-                    _buildingChannelList.Clear();
-                    break;
-                case IrcNumericMethod.RPL_LIST:
-                    {
-                        var c = new IrcChannel();
-                        c.Name = e.Parameters[0];
-                        c.UserCount = int.Parse(e.Parameters[1]);
-                        c.Topic = e.Parameters[2];
-                        _buildingChannelList.Add(c);
-                    }
-                    break;
-                case IrcNumericMethod.RPL_TOPIC:
-                    GetChannel(e.Parameters[0]).Topic = e.Parameters[1];
-                    break;
-                case IrcNumericMethod.RPL_NOTOPIC:
-                    GetChannel(e.Parameters[0]).Topic = "";
-                    break;
                 case IrcNumericMethod.RPL_VERSION:
                     _serverInfo.ServerVersion = e.Parameters[1] + " " + e.Parameters[0];
-                    break;
-                case IrcNumericMethod.RPL_WHOREPLY:
-                    {
-                        var u = GetChannelUser(e.Parameters[0], e.Parameters[4]);
-                        u.User.Username = e.Parameters[1];
-                        u.User.Hostname = e.Parameters[2];
-                        //u.User.Server = e.Parameters[3];
-                        u.User.Nickname = e.Parameters[4];
-                        u.User.IsAway = e.Parameters[5][1] == 'G';
-                        u.User.IsIrcOp = e.Parameters[5][2] == '*';
-                        u.User.Realname = e.Parameters[6].Substring(e.Parameters[6].IndexOf(' ') + 1);
-
-                        // Add channel user mode from prefix
-                        var modeChar = _serverInfo.SupportedChannelUserModes[new string(_serverInfo.SupportedChannelUserPrefixes).IndexOf(e.Parameters[5].Last())];
-                        if (!u.Modes.Contains(modeChar))
-                            u.Modes += modeChar;
-                    }
-                    break;
-                case IrcNumericMethod.RPL_NAMREPLY:
-                    {
-                        string ourprefix = e.Parameters[0];
-                        string channel = e.Parameters[1];
-                        foreach (string prefixednick in e.Parameters)
-                        {
-                            char prefix = prefixednick[0];
-                            if (new string(_serverInfo.SupportedChannelUserPrefixes).Contains(prefix))
-                            {
-                                var u = GetChannelUser(channel, prefixednick.Substring(1));
-                                var modeChar = _serverInfo.SupportedChannelUserModes[new string(_serverInfo.SupportedChannelUserPrefixes).IndexOf(e.Parameters[5].Last())];
-                                if (!u.Modes.Contains(modeChar))
-                                    u.Modes += modeChar;
-                            }
-                        }
-                    }
-                    break;
-                case IrcNumericMethod.RPL_BANLIST:
-                    {
-                        var channel = GetChannel(e.Parameters[0]);
-                        var u = new IrcMaskedUser(channel, e.Parameters[1], e.Parameters.Skip(2).ToArray());
-                        channel._temporaryBanList.Add(u);
-                    }
-                    break;
-                case IrcNumericMethod.RPL_ENDOFBANLIST:
-                    GetChannel(e.Parameters[0])._syncBanList();
-                    break;
-                case IrcNumericMethod.RPL_INVITELIST:
-                    {
-                        var c = GetChannel(e.Parameters[0]);
-                        c._temporaryInviteList.Add(new IrcMaskedUser(c, e.Parameters[1], e.Parameters.Skip(2).ToArray()));
-                    }
-                    break;
-                case IrcNumericMethod.RPL_ENDOFINVITELIST:
-                    GetChannel(e.Parameters[0])._syncInviteList();
-                    break;
-                case IrcNumericMethod.RPL_EXCEPTLIST:
-                    {
-                        var c = GetChannel(e.Parameters[0]);
-                        c._temporaryExceptList.Add(new IrcMaskedUser(c, e.Parameters[1], e.Parameters.Skip(2).ToArray()));
-                    }
-                    break;
-                case IrcNumericMethod.RPL_ENDOFEXCEPTLIST:
-                    GetChannel(e.Parameters[0])._syncExceptList();
-                    break;
-                case IrcNumericMethod.RPL_CHANNELMODEIS:
-                    {
-                        var c = GetChannel(e.Parameters[0]);
-                        c.Modes.Clear();
-                        int paramIndex = 1;
-                        foreach (char m in e.Parameters[1])
-                        {
-                            if (
-                                _serverInfo.SupportedATypeChannelModes.Contains(m) // user- or mask-specific mode, always with parameter
-                                || _serverInfo.SupportedBTypeChannelModes.Contains(m) // always with parameter
-                                || _serverInfo.SupportedCTypeChannelModes.Contains(m) // only with parameter when set
-                                )
-                                c.Modes.Add(m + " " + e.Parameters[++paramIndex]);
-                            else
-                                c.Modes.Add(m.ToString());
-                        }
-                    }
                     break;
                     // TODO: Implement RPL_UNIQOPIS
             }
@@ -234,10 +114,6 @@ namespace Icebot.Irc
             else
                 switch (e.Command)
                 {
-                    case "JOIN":
-                        break;
-                    case "PART":
-                        break;
                 }
     
             base.OnRawReceived(e);
@@ -249,13 +125,6 @@ namespace Icebot.Irc
         }
 
         // Public functions
-        public IrcChannel GetChannel(string channel)
-        {
-            foreach (IrcChannel c in _knownChannels)
-                if(c.Name.Equals(channel, StringComparison.OrdinalIgnoreCase))
-                    return c;
-            return null;
-        }
         public IrcUser[] GetUsersByHostmask(string hostmask)
         {
             List<IrcUser> users = new List<IrcUser>();
@@ -275,6 +144,7 @@ namespace Icebot.Irc
         {
             return GetSingleUserByHostmask(nickname + "!*@*");
         }
+        /*
         public IrcChannelUser GetChannelUser(string channel, string nickname)
         {
             var co = GetChannel(channel);
@@ -283,6 +153,13 @@ namespace Icebot.Irc
             foreach (var u in co.Users)
                 if (u.User.Nickname == nickname)
                     return u;
+            return null;
+        }
+        public IrcChannel GetChannel(string channel)
+        {
+            foreach (IrcChannel c in _knownChannels)
+                if(c.Name.Equals(channel, StringComparison.OrdinalIgnoreCase))
+                    return c;
             return null;
         }
         public IrcChannel[] GetChannelsOfUser(string nickname)
@@ -301,6 +178,7 @@ namespace Icebot.Irc
                     }
             return channels.ToArray();
         }
+         */
         public void Login(string nickname, string username, string realname, string password, bool wallops, bool invisible)
         {
             byte mode = 0;

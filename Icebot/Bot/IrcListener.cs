@@ -122,7 +122,7 @@ namespace Icebot.Bot
         }
 
          */
-
+        
         protected ILog Log { get { return LogManager.GetLogger("IrcListener/" + DisplayName); } }
 
         public string Hostname { get; set; }
@@ -135,6 +135,7 @@ namespace Icebot.Bot
         public bool ReceiveWallops { get; set; }
         public bool Invisible { get; set; }
         public bool UseSSL { get; set; }
+        public string Prefix { get; set; }
 
         public Irc.IrcClient Irc { get; set; }
 
@@ -144,6 +145,7 @@ namespace Icebot.Bot
             if (CommandReceived != null)
                 CommandReceived.Invoke(this, e);
 
+            /*
             var c =
                 from cmd in _registeredCommands
                 where cmd.Name.Equals(e.Command.Command, StringComparison.OrdinalIgnoreCase) && ((cmd.MessageType & e.Command.Type) != 0) && cmd.Callback != null
@@ -151,9 +153,10 @@ namespace Icebot.Bot
 
             if (c.Count() == 1)
                 c.First().Callback.Invoke(e.Command);
+             */
         }
 
-        internal List<IcebotCommandDeclaration> _registeredCommands = new List<IcebotCommandDeclaration>();
+        /*internal List<IcebotCommandDeclaration> _registeredCommands = new List<IcebotCommandDeclaration>();
         public void RegisterCommand(IcebotCommandDeclaration declaration)
         {
             // garbage collect
@@ -189,6 +192,7 @@ namespace Icebot.Bot
         {
             _registeredCommands.Remove(declaration);
         }
+         */
         
         public IrcListener()
         {
@@ -198,6 +202,7 @@ namespace Icebot.Bot
         {
             Stop();
         }
+  
         private void __construct()
         {
             Irc = new Irc.IrcClient();
@@ -217,8 +222,8 @@ namespace Icebot.Bot
                 //if ((e.MessageType & global::Icebot.Irc.IrcMessageType.Public) != 0)
                 //    o = (from c in ChannelInstances where c.Settings.Name.Equals(e.Target, StringComparison.OrdinalIgnoreCase) select c).First();
 
-                if (IcebotCommand.IsValid(o, e))
-                    OnCommandReceived(new IcebotCommandEventArgs(new IcebotCommand(o, e)));
+                if (Command.IsValid(o, e, Prefix))
+                    OnCommandReceived(new IcebotCommandEventArgs(new Command(e, this, this.Prefix), this, null));
             }
             catch (Exception ex)
             {
@@ -238,6 +243,12 @@ namespace Icebot.Bot
         }
         void Irc_NumericReceived(object sender, IrcNumericReplyEventArgs e)
         {
+            switch (e.Numeric)
+            {
+                // TODO: Parse channel-specific numeric replies
+                case global::Icebot.Irc.IrcNumericMethod.RPL_BANLIST:
+                    break;
+            }
         }
         void Irc_Disconnected(object sender, EventArgs e)
         {
@@ -246,7 +257,6 @@ namespace Icebot.Bot
         {
             Irc.Login(Nickname, Username,  Realname,  Password, ReceiveWallops, Invisible);
         }
-
         internal void Start()
         {
             Irc.Connect(Hostname, Port, UseSSL);

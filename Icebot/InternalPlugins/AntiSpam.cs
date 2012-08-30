@@ -72,11 +72,13 @@ namespace Icebot
                     s = (int)(s * (1 + 1 / (DateTime.Now - ast.Last()).TotalSeconds));
 
                 // Admins get less points (founder no points, see beginning of the function)
-                if (Channel.UserHasMode(nick, "%"))
+                if (Channel.GetUser(nick).HasPrefix("%"))
                     s /= 2;
-                if (Channel.UserHasMode(nick, "@"))
+                if (Channel.GetUser(nick).HasPrefix("@"))
                     s /= 2;
-                if (Channel.UserHasMode(nick, "&"))
+                if (Channel.GetUser(nick).HasPrefix("&"))
+                    s /= 2;
+                if (Channel.GetUser(nick).HasPrefix("~"))
                     s /= 2;
 
                 return s;
